@@ -12,11 +12,14 @@ const Button = ({
   textSize = 'text-sm',
   children,
 }) => {
-  const baseStyles = `flex items-center justify-center font-sans rounded-2xl px-1 py-1.5
-    md:px-4 lg:px-5 transition ease-in-out duration-300`;
+  const baseStyles = `flex items-center justify-center font-sans rounded-2xl px-2 py-1
+    md:px-4 md:py-1 lg:px-4 lg:py-1 transition ease-in-out duration-300`;
 
   const typeStyles = {
-    primary: 'bg-blue text-white hover:bg-blue border-none',
+    'primary': 'bg-blue text-white hover:shadow-md border-blue border-2',
+    'secondary': 'text-black hover:drop-shadow-md border-none',
+    'tertiary': 'bg-gray text-white hover:shadow-md border-gray border-2',
+    'tertiary-bordered': 'text-gray hover:drop-shadow-md border-gray border-2'
   };
 
   const minHeightClass = `min-h-[${minHeight}px]`;
