@@ -4,7 +4,21 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
-  },
+    extend: {
+      colors: {
+             'blue': '#0064AC',
+             'light-blue': '#BCD9EE',
+             'gray': '#1F2429',
+             'light-gray': '#C5CBD1',
+             'success-25': '#F6FEF9',
+             'success-100': '#D1FADF',
+             'success-300': '#6CE9A6',
+             'success-700': '#027A48'
+             },
+        },
+        fontFamily: {
+          inter: ['Inter', 'sans-serif'],
+        },
+    },
   plugins: [],
 }

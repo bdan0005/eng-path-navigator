@@ -1,32 +1,28 @@
-// components/Button.jsx
-import React from 'react';
-
 const Button = ({
   type = 'primary',
   handleClick = () => {},
   iconSvg = '',
   iconPos = 'left',
   text = 'Button',
-  fullWidth = false,
+  fitContainerWidth = false,
   minHeight = 11,
   fitContainerHeight = false,
   disabled = false,
+  boldText = 'semi',
+  textSize = 'text-sm',
   children,
 }) => {
-  const baseStyles = `flex items-center justify-center font-sans rounded-lg px-3 py-2.5 
-    md:px-4 md:py-2.5 lg:px-5 lg:py-2.5 transition ease-in-out duration-300`;
+  const baseStyles = `flex items-center justify-center font-sans rounded-2xl px-1 py-1.5
+    md:px-4 lg:px-5 transition ease-in-out duration-300`;
 
   const typeStyles = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-800 border-none',
-    secondary: 'bg-blue-50 text-blue-700 hover:bg-blue-100 border-none',
-    disabled: 'bg-gray-200 text-white cursor-not-allowed border-none',
-    error: 'bg-red-600 text-white border-none',
-    'no-bg': '',
+    primary: 'bg-blue text-white hover:bg-blue border-none',
   };
 
   const minHeightClass = `min-h-[${minHeight}px]`;
-  const fullWidthClass = fullWidth ? 'w-full text-center' : '';
-  const heightClass = fitContainerHeight ? 'h-full' : '';
+  const fullWidthClass = fitContainerWidth ? 'w-full text-center' : '';
+  const fullHeightClass = fitContainerHeight ? 'h-full' : '';
+  const fontWeightClass = boldText === 'semi' ? 'font-semibold' : boldText ? 'font-bold' : 'font-normal';
 
   const iconMargin = text ? (iconPos === 'left' ? 'mr-2' : 'ml-2') : '';
 
@@ -36,7 +32,7 @@ const Button = ({
         type="button"
         onClick={handleClick}
         disabled={disabled}
-        className={`${baseStyles} ${typeStyles[type] || ''} ${minHeightClass} ${fullWidthClass} ${heightClass}`}
+        className={`${baseStyles} ${typeStyles[type] || ''} ${minHeightClass} ${fullWidthClass} ${fullHeightClass} ${fontWeightClass} ${textSize}`}
       >
         {iconSvg && iconPos === 'left' && (
           <span
