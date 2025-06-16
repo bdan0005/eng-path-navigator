@@ -1,13 +1,9 @@
-import Button from './components/Button';
+import TopBar from './components/TopBar';
 
 function App() {
   return (
     <div className="p-4">
-      <Button
-        type="primary"
-        text="Submit"
-        handleClick={() => alert('Clicked!')}
-      />
+      <TopBar />
     </div>
   );
 }
