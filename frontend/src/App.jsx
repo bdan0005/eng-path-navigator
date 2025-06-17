@@ -1,6 +1,5 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import TopBar from './components/TopBar';
-import Module from './components/Module';
 
 function App() {
   return (
@@ -9,7 +8,6 @@ function App() {
         <div className="pb-5">
           <TopBar />
         </div>
-        <Module />
       </div>
     </Router>
   );

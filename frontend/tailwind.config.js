@@ -21,4 +21,7 @@ module.exports = {
         },
     },
   plugins: [],
+  safelist: [
+    'min-h-[70px]',
+  ],
 }
