@@ -3,7 +3,7 @@ import Logo from '../assets/temp_logo.png';
 
 const TopBar = () => {
   return (
-    <div className="w-full bg-white shadow-sm px-40 py-4 rounded-2xl flex items-center justify-between">
+    <div className="w-full bg-white shadow-sm px-20 py-4 rounded-2xl flex items-center justify-between">
       <img src={Logo} alt="Logo" className="h-12 w-auto" />
       <Button 
         type="secondary" 
