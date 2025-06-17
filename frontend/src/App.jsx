@@ -9,6 +9,7 @@ function App() {
         <div className="pb-5">
           <TopBar />
         </div>
+        <Module />
       </div>
     </Router>
   );
