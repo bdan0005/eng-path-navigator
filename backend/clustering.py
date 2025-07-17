@@ -79,69 +79,96 @@ df['agreeableness_memberships'] = df['Agreeableness'].apply(membership_from_labe
 df['openness_memberships'] = df['Openness'].apply(membership_from_label)
 
 # -------------------------------
-# Rule Generation
+# Build Specialisation Profiles (average fuzzy vectors)
 # -------------------------------
-labels = ['Low', 'Medium', 'High']
-rule_scores = defaultdict(float)
+def build_specialisation_profiles(df):
+    profiles = defaultdict(list)
 
-numeric_features = {
+    for _, row in df.iterrows():
+        profile = []
+
+        # Numeric features - add their 3 membership values each
+        for prefix in ['cad', 'design', 'printing', 'teamwork', 'coding', 'microcontrollers']:
+            profile += [row[f"{prefix}_low"], row[f"{prefix}_med"], row[f"{prefix}_high"]]
+
+        # Personality traits (already tuples of 3 membership values)
+        for col in ['extraversion_memberships', 'emotionality_memberships',
+                    'conscientiousness_memberships', 'agreeableness_memberships', 'openness_memberships']:
+            profile += list(row[col])
+
+        profiles[row['Current specialisation']].append(profile)
+
+    # Average profiles for each specialisation
+    averaged = {spec: np.mean(vectors, axis=0) for spec, vectors in profiles.items()}
+    return averaged
+
+specialisation_profiles = build_specialisation_profiles(df)
+
+# -------------------------------
+# Create fuzzy vector for a new student input
+# -------------------------------
+def fuzzy_vector_for_student(student_input, centers):
+    profile = []
+
+    # Numeric features
+    for feat, (a, b, c) in centers.items():
+        x = student_input[feat]
+        mu_low = triangular_membership(x, 0, a, b)
+        mu_med = triangular_membership(x, a, b, c)
+        mu_high = triangular_membership(x, b, c, 100)
+        profile += [mu_low, mu_med, mu_high]
+
+    # Labeled features (personality traits)
+    for feat in ['Extraversion', 'Emotionality', 'Conscientiousness', 'Agreeableness', 'Openness']:
+        profile += list(label_to_membership.get(student_input[feat], (0, 0, 0)))
+
+    return np.array(profile)
+
+# -------------------------------
+# Recommend specialisations based on similarity
+# -------------------------------
+def recommend_by_similarity(student_input, centers, specialisation_profiles, top_n=3):
+    student_vec = fuzzy_vector_for_student(student_input, centers)
+    similarities = {}
+
+    for spec, profile_vec in specialisation_profiles.items():
+        # Compute cosine similarity
+        sim = np.dot(student_vec, profile_vec) / (np.linalg.norm(student_vec) * np.linalg.norm(profile_vec))
+        similarities[spec] = sim
+
+    return sorted(similarities.items(), key=lambda x: x[1], reverse=True)[:top_n]
+
+# -------------------------------
+# Example new student input
+# -------------------------------
+new_student = {
+    'CAD': 100,
+    'Design': 100,
+    'Printing': 55,
+    'Teamwork': 88,
+    'Coding': 0,
+    'Microcontrollers': 0,
+    'Extraversion': "Low",
+    'Emotionality': "Low",
+    'Conscientiousness': "Low",
+    'Agreeableness': "Medium",
+    'Openness': "High"
+}
+
+numeric_centers = {
     'CAD': cad_centers,
     'Design': design_centers,
     'Printing': printing_centers,
     'Teamwork': teamwork_centers,
     'Coding': coding_centers,
-    'Microcontrollers': microcontrollers_centers,
+    'Microcontrollers': microcontrollers_centers
 }
 
-labeled_features = {
-    'Extraversion': 'extraversion_memberships',
-    'Emotionality': 'emotionality_memberships',
-    'Conscientiousness': 'conscientiousness_memberships',
-    'Agreeableness': 'agreeableness_memberships',
-    'Openness': 'openness_memberships',
-}
-
-for _, row in df.iterrows():
-    spec = row['Current specialisation']
-    fuzzy_sets = []
-
-    # Add fuzzy memberships from numeric features
-    for feat_name in numeric_features:
-        feat_key = feat_name.lower().replace(" ", "_")
-        memberships = [
-            row[f'{feat_key}_low'],
-            row[f'{feat_key}_med'],
-            row[f'{feat_key}_high'],
-        ]
-        fuzzy_sets.append((feat_name, memberships))
-
-    # Add memberships from pre-labeled personality traits
-    for feat_name, col_name in labeled_features.items():
-        memberships = row[col_name]
-        fuzzy_sets.append((feat_name, memberships))
-
-    # Recursively generate all rule label combinations and score them
-    def generate_combinations(i=0, path=(), strength=1.0):
-        if i == len(fuzzy_sets):
-            rule_key = tuple(path) + (spec,)
-            rule_scores[rule_key] += strength
-            return
-        feat_name, memberships = fuzzy_sets[i]
-        for j, label in enumerate(labels):
-            u = memberships[j]
-            if u > 0:
-                generate_combinations(i + 1, path + (label,), strength * u)
-
-    generate_combinations()
-
 # -------------------------------
-# Output Learned Rules
+# Get recommendations
 # -------------------------------
-feature_names = list(numeric_features.keys()) + list(labeled_features.keys())
+recommendations = recommend_by_similarity(new_student, numeric_centers, specialisation_profiles)
 
-print("\nTop Learned Fuzzy Rules:\n")
-for rule, strength in sorted(rule_scores.items(), key=lambda x: x[1], reverse=True)[:30]:
-    labels_part = rule[:-1]
-    spec = rule[-1]
-    conditions = " AND ".join([f"{feature_names[i]} is {label}" for i, label in enumerate(labels_part)])
-    print(f"IF {conditions} THEN Recommend {spec} (Strength: {strength:.2f})")
+print("\nRecommended specialisations:")
+for spec, score in recommendations:
+    print(f"{spec}: {score:.4f}")
