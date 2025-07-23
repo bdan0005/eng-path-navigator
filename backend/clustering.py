@@ -34,13 +34,13 @@ def triangular_membership(x, a, b, c):
     else:
         return (c - x) / (c - b)
 
-def compute_memberships(values, centers):
+def compute_memberships(values, centers, min_val, max_val):
     a, b, c = centers
     memberships = []
     for x in values:
-        u_low = triangular_membership(x, 0, a, b)
+        u_low = triangular_membership(x, min_val, a, b)
         u_med = triangular_membership(x, a, b, c)
-        u_high = triangular_membership(x, b, c, 100)  # Assuming max 100
+        u_high = triangular_membership(x, b, c, max_val)
         memberships.append((u_low, u_med, u_high))
     return memberships
 
@@ -59,15 +59,37 @@ teamwork_centers = define_fuzzy_sets(df['Teamwork'])
 coding_centers = define_fuzzy_sets(df['Coding'])
 microcontrollers_centers = define_fuzzy_sets(df['Microcontrollers'])
 
+# Get min and max for each numeric feature
+feature_ranges = {
+    'CAD': (df['CAD'].min(), df['CAD'].max()),
+    'Design': (df['Design'].min(), df['Design'].max()),
+    'Printing': (df['3D Printing'].min(), df['3D Printing'].max()),
+    'Teamwork': (df['Teamwork'].min(), df['Teamwork'].max()),
+    'Coding': (df['Coding'].min(), df['Coding'].max()),
+    'Microcontrollers': (df['Microcontrollers'].min(), df['Microcontrollers'].max())
+}
+
 # -------------------------------
 # Compute memberships for numeric features
 # -------------------------------
-df[['cad_low', 'cad_med', 'cad_high']] = pd.DataFrame(compute_memberships(df['CAD'], cad_centers))
-df[['design_low', 'design_med', 'design_high']] = pd.DataFrame(compute_memberships(df['Design'], design_centers))
-df[['printing_low', 'printing_med', 'printing_high']] = pd.DataFrame(compute_memberships(df['3D Printing'], printing_centers))
-df[['teamwork_low', 'teamwork_med', 'teamwork_high']] = pd.DataFrame(compute_memberships(df['Teamwork'], teamwork_centers))
-df[['coding_low', 'coding_med', 'coding_high']] = pd.DataFrame(compute_memberships(df['Coding'], coding_centers))
-df[['microcontrollers_low', 'microcontrollers_med', 'microcontrollers_high']] = pd.DataFrame(compute_memberships(df['Microcontrollers'], microcontrollers_centers))
+df[['cad_low', 'cad_med', 'cad_high']] = pd.DataFrame(
+    compute_memberships(df['CAD'], cad_centers, *feature_ranges['CAD'])
+)
+df[['design_low', 'design_med', 'design_high']] = pd.DataFrame(
+    compute_memberships(df['Design'], design_centers, *feature_ranges['Design'])
+)
+df[['printing_low', 'printing_med', 'printing_high']] = pd.DataFrame(
+    compute_memberships(df['3D Printing'], printing_centers, *feature_ranges['Printing'])
+)
+df[['teamwork_low', 'teamwork_med', 'teamwork_high']] = pd.DataFrame(
+    compute_memberships(df['Teamwork'], teamwork_centers, *feature_ranges['Teamwork'])
+)
+df[['coding_low', 'coding_med', 'coding_high']] = pd.DataFrame(
+    compute_memberships(df['Coding'], coding_centers, *feature_ranges['Coding'])
+)
+df[['microcontrollers_low', 'microcontrollers_med', 'microcontrollers_high']] = pd.DataFrame(
+    compute_memberships(df['Microcontrollers'], microcontrollers_centers, *feature_ranges['Microcontrollers'])
+)
 
 # -------------------------------
 # Compute membership tuples from labels (already given)
@@ -107,18 +129,17 @@ specialisation_profiles = build_specialisation_profiles(df)
 # -------------------------------
 # Create fuzzy vector for a new student input
 # -------------------------------
-def fuzzy_vector_for_student(student_input, centers):
+def fuzzy_vector_for_student(student_input, centers, feature_ranges):
     profile = []
 
-    # Numeric features
     for feat, (a, b, c) in centers.items():
         x = student_input[feat]
-        mu_low = triangular_membership(x, 0, a, b)
+        min_val, max_val = feature_ranges[feat]
+        mu_low = triangular_membership(x, min_val, a, b)
         mu_med = triangular_membership(x, a, b, c)
-        mu_high = triangular_membership(x, b, c, 100)
+        mu_high = triangular_membership(x, b, c, max_val)
         profile += [mu_low, mu_med, mu_high]
 
-    # Labeled features (personality traits)
     for feat in ['Extraversion', 'Emotionality', 'Conscientiousness', 'Agreeableness', 'Openness']:
         profile += list(label_to_membership.get(student_input[feat], (0, 0, 0)))
 
@@ -127,25 +148,47 @@ def fuzzy_vector_for_student(student_input, centers):
 # -------------------------------
 # Recommend specialisations based on similarity
 # -------------------------------
-def recommend_by_similarity(student_input, centers, specialisation_profiles, top_n=3):
-    student_vec = fuzzy_vector_for_student(student_input, centers)
+def recommend_by_similarity(student_input, centers, specialisation_profiles, feature_ranges, top_n=3):
+    student_vec = fuzzy_vector_for_student(student_input, centers, feature_ranges)
     similarities = {}
 
     for spec, profile_vec in specialisation_profiles.items():
-        # Compute cosine similarity
         sim = np.dot(student_vec, profile_vec) / (np.linalg.norm(student_vec) * np.linalg.norm(profile_vec))
         similarities[spec] = sim
 
     return sorted(similarities.items(), key=lambda x: x[1], reverse=True)[:top_n]
 
 # -------------------------------
+# Print fuzzy rules for each specialisation
+# -------------------------------
+def print_fuzzy_rules(specialisation_profiles):
+    trait_names = ['CAD', 'Design', '3D Printing', 'Teamwork', 'Coding', 'Microcontrollers',
+                   'Extraversion', 'Emotionality', 'Conscientiousness', 'Agreeableness', 'Openness']
+    
+    labels = ['Low', 'Medium', 'High']
+
+    for spec, profile in specialisation_profiles.items():
+        rule_parts = []
+        for i, trait in enumerate(trait_names):
+            # Each trait has 3 membership values, so index offset is i * 3
+            idx = i * 3
+            values = profile[idx:idx+3]
+            max_label = labels[np.argmax(values)]
+            rule_parts.append(f"{trait} is {max_label}")
+        rule_str = " AND ".join(rule_parts)
+        print(f"IF {rule_str} THEN Specialisation is {spec}\n")
+
+print("\nFuzzy Rules Learned from Data:\n")
+print_fuzzy_rules(specialisation_profiles)
+
+# -------------------------------
 # Example new student input
 # -------------------------------
 new_student = {
-    'CAD': 100,
-    'Design': 100,
-    'Printing': 55,
-    'Teamwork': 88,
+    'CAD': 3,
+    'Design': 5,
+    'Printing': 2,
+    'Teamwork': 1,
     'Coding': 0,
     'Microcontrollers': 0,
     'Extraversion': "Low",
@@ -167,7 +210,7 @@ numeric_centers = {
 # -------------------------------
 # Get recommendations
 # -------------------------------
-recommendations = recommend_by_similarity(new_student, numeric_centers, specialisation_profiles)
+recommendations = recommendations = recommend_by_similarity(new_student, numeric_centers, specialisation_profiles, feature_ranges)
 
 print("\nRecommended specialisations:")
 for spec, score in recommendations:
