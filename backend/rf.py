@@ -47,16 +47,16 @@ print(safe_classification_report(y_test, y_pred, le))
 
 new_student = {
     'CAD': 3,
-    'Design': 5,
+    'Design': 2,
     '3D Printing': 2,
-    'Teamwork': 1,
-    'Coding': 0,
-    'Microcontrollers': 0,
-    'Extraversion': "Low",
-    'Emotionality': "Low",
-    'Conscientiousness': "Low",
-    'Agreeableness': "Medium",
-    'Openness': "High"
+    'Teamwork': 2,
+    'Coding': 2,
+    'Microcontrollers': 2,
+    'Extraversion': "Medium",
+    'Emotionality': "Medium",
+    'Conscientiousness': "Medium",
+    'Agreeableness': "High",
+    'Openness': "Medium"
 }
 
 # Format input
