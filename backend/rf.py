@@ -4,6 +4,8 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
 
 # Load your data
 df = pd.read_excel("specialisation_data_clean.xlsx", engine="openpyxl")
@@ -81,3 +83,5 @@ predicted_class = clf.predict(student_vec)[0]
 predicted_label = le.inverse_transform([predicted_class])[0]
 
 print("Predicted specialisation:", predicted_label)
+print(accuracy_score(y_test, y_pred))
+print(confusion_matrix(y_test, y_pred))

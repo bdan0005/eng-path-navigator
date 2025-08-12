@@ -215,3 +215,38 @@ recommendations = recommendations = recommend_by_similarity(new_student, numeric
 print("\nRecommended specialisations:")
 for spec, score in recommendations:
     print(f"{spec}: {score:.4f}")
+
+# -------------------------------
+# Evaluate accuracy using the full dataset (no train/test split)
+# -------------------------------
+def evaluate_full_accuracy(df, centers, profiles, feature_ranges):
+    correct = 0
+    total = len(df)
+
+    for _, row in df.iterrows():
+        student_input = {
+            'CAD': row['CAD'],
+            'Design': row['Design'],
+            'Printing': row['3D Printing'],
+            'Teamwork': row['Teamwork'],
+            'Coding': row['Coding'],
+            'Microcontrollers': row['Microcontrollers'],
+            'Extraversion': row['Extraversion'],
+            'Emotionality': row['Emotionality'],
+            'Conscientiousness': row['Conscientiousness'],
+            'Agreeableness': row['Agreeableness'],
+            'Openness': row['Openness']
+        }
+
+        recommendations = recommend_by_similarity(student_input, centers, profiles, feature_ranges, top_n=1)
+        predicted = recommendations[0][0]
+        actual = row['Current specialisation']
+        if predicted == actual:
+            correct += 1
+
+    accuracy = correct / total
+    return accuracy
+
+accuracy = evaluate_full_accuracy(df, numeric_centers, specialisation_profiles, feature_ranges)
+
+print(f"\nTop-1 Accuracy (same data used for training and testing): {accuracy:.2%}")
