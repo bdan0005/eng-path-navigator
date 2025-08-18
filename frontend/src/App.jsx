@@ -1,6 +1,7 @@
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TopBar from './components/TopBar';
 import Module from './components/Module';
+import Specialisations from './components/Specialisations';
 
 function App() {
   return (
@@ -12,6 +13,10 @@ function App() {
           </div>
           <Module />
         </div>
+        <Routes>
+          <Route path="/" element={<div>{/* Home content here */}</div>} />
+          <Route path="/Specialisations" element={<Specialisations />} />
+        </Routes>
       </div>
     </Router>
   );
