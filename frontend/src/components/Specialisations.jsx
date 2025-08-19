@@ -1,23 +1,21 @@
 import React from "react";
 import Block from "./Block";
-
-// import your icons here as in App.jsx
-import biomedIcon from '../assets/specialisation_icons/biomed-ellipse-43.svg';
-import chemIcon from '../assets/specialisation_icons/chem-ellipse-39.svg';
-import civilIcon from '../assets/specialisation_icons/civil-ellipse-25.svg';
-import electricalIcon from '../assets/specialisation_icons/electrical-ellipse-62.svg';
-import enviroIcon from '../assets/specialisation_icons/enviro-ellipse-29.svg';
-import materialsIcon from '../assets/specialisation_icons/materials-ellipse-48.svg';
-import softwareIcon from '../assets/specialisation_icons/software-ellipse-14.svg';
+import SoftwareIcon from "./icons/SoftwareIcon";
+import CivilIcon from "./icons/CivilIcon";
+import EnviroIcon from "./icons/EnviroIcon";
+import ChemIcon from "./icons/ChemIcon";
+import BiomedIcon from "./icons/BiomedIcon";
+import MatIcon from "./icons/MatIcon";
+import ElecIcon from "./icons/ElecIcon"; // Make sure this file exists
 
 const specialisations = [
-  { icon: biomedIcon, name: "Biomedical Engineering", description: "Applies engineering principles to medicine and biology." },
-  { icon: chemIcon, name: "Chemical Engineering", description: "Focuses on chemical processes and production." },
-  { icon: civilIcon, name: "Civil Engineering", description: "Designs and builds infrastructure projects." },
-  { icon: electricalIcon, name: "Electrical Engineering", description: "Works with electrical systems and technology." },
-  { icon: enviroIcon, name: "Environmental Engineering", description: "Solves environmental problems using engineering." },
-  { icon: materialsIcon, name: "Materials Engineering", description: "Develops and tests new materials." },
-  { icon: softwareIcon, name: "Software Engineering", description: "Designs and builds software systems." },
+  { icon: BiomedIcon, name: "Biomedical Engineering", description: "Applies engineering principles to medicine and biology." },
+  { icon: ChemIcon, name: "Chemical Engineering", description: "Focuses on chemical processes and production." },
+  { icon: CivilIcon, name: "Civil Engineering", description: "Designs and builds infrastructure projects." },
+  { icon: ElecIcon, name: "Electrical Engineering", description: "Works with electrical systems and technology." },
+  { icon: EnviroIcon, name: "Environmental Engineering", description: "Solves environmental problems using engineering." },
+  { icon: MatIcon, name: "Materials Engineering", description: "Develops and tests new materials." },
+  { icon: SoftwareIcon, name: "Software Engineering", description: "Designs and builds software systems." },
 ];
 
 const Specialisations = () => (

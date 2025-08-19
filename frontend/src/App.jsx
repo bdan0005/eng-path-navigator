@@ -8,14 +8,11 @@ function App() {
     <Router>
       <div className="px-10 py-5">
         <div className="pb-5">
-          <div className="pb-5">
-            <TopBar />
-          </div>
-          <Module />
+          <TopBar />
         </div>
         <Routes>
-          <Route path="/" element={<div>{/* Home content here */}</div>} />
-          <Route path="/Specialisations" element={<Specialisations />} />
+          <Route path="/" element={<Module />} />
+          <Route path="/specialisations" element={<Specialisations />} />
         </Routes>
       </div>
     </Router>

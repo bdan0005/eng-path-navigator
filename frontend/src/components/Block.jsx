@@ -1,10 +1,10 @@
 import React from "react";
 
-const Block = ({ icon, name, description }) => (
+const Block = ({ icon: Icon, name, description }) => (
   <div className="bg-white rounded-2xl shadow-md flex flex-col items-center p-6 w-72 hover:shadow-lg transition-shadow">
     {/* Icon */}
     <div className="bg-blue-100 rounded-full p-4 mb-4 flex items-center justify-center">
-      <img src={icon} alt={`${name} icon`} className="w-12 h-12" />
+      <Icon />
     </div>
     {/* Name */}
     <h3 className="text-lg font-semibold text-center mb-2">{name}</h3>
