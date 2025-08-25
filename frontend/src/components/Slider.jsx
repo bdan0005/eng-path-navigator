@@ -1,6 +1,6 @@
 function Slider({
-  min,
-  max,
+  min = 0,
+  max = 100,
   value,
   width = "600px",
   onChange,

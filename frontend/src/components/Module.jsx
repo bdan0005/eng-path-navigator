@@ -7,7 +7,7 @@ const questions = [
   {
     id: 1,
     text: "What were the results of your ITP Metrics Personality Assessment?",
-    options: ["Analytical", "Creative", "Practical", "Social"]
+    options: ["Extraversion", "Emotionality", "Conscientiousness", "Agreeableness", "Openness"]
   },
 ];
 
@@ -75,19 +75,7 @@ const Module = () => {
       </div>
 
       <div className="flex flex-col space-y-4">
-        {currentQuestion.options.map((option) => (
-          <button
-            key={option}
-            className={`px-6 py-3 rounded-lg border transition ${
-              answers[currentQuestion.id] === option
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-black hover:bg-blue-100'
-            }`}
-            onClick={() => handleAnswerSelect(option)}
-          >
-            {option}
-          </button>
-        ))}
+        <Slider />
       </div>
     </div>
   );
