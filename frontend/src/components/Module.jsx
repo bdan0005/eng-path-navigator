@@ -1,22 +1,14 @@
 import { useState } from 'react';
 import Button from './Button';
+import Slider from './Slider';
+import ProgressHeader from './ProgressHeader';
 
 const questions = [
   {
     id: 1,
-    text: "Which of these best describes you?",
+    text: "What were the results of your ITP Metrics Personality Assessment?",
     options: ["Analytical", "Creative", "Practical", "Social"]
   },
-  {
-    id: 2,
-    text: "Which subject do you enjoy the most?",
-    options: ["Math", "Physics", "Design", "Biology"]
-  },
-  {
-    id: 3,
-    text: "Do you prefer working alone or in a team?",
-    options: ["Alone", "Team"]
-  }
 ];
 
 const Module = () => {
@@ -41,7 +33,6 @@ const Module = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       console.log("Survey complete! User answers:", updatedAnswers);
-      // you can send results to backend here
     }
   };
 
@@ -78,6 +69,7 @@ const Module = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
+      <ProgressHeader currentSection={currentQuestionIndex}/>
       <div className="text-3xl font-bold text-black mb-6 text-center">
         {currentQuestion.text}
       </div>
