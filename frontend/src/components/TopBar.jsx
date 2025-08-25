@@ -1,3 +1,5 @@
+
+import { Link } from 'react-router-dom';
 import Button from './Button';
 import Logo from '../assets/temp_logo.png';
 
@@ -9,10 +11,12 @@ const TopBar = () => {
         type="secondary" 
         text="About"
       />
-      <Button 
-        type="secondary" 
-        text="Specialisations"
-      />
+      <Link to="/Specialisations">
+        <Button 
+          type="secondary" 
+          text="Specialisations"
+        />
+      </Link>
       <Button 
         type="primary" 
         text="Contact us"
