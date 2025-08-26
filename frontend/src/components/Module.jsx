@@ -75,7 +75,11 @@ const Module = () => {
       </div>
 
       <div className="flex flex-col space-y-4">
-        <Slider />
+        {/* For some reason the slider doesn't go to 0 if you change manually and jumps back to default val */}
+        <Slider 
+          value={answers[currentQuestion.id] || 5}
+          onChange={(value) => setAnswers({ ...answers, [currentQuestion.id]: value })}
+        />
       </div>
     </div>
   );
