@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Button from './Button';
 import SliderQuestion from './SliderQuestion';
+import CheckboxQuestion from './CheckboxQuestion';
 import ProgressHeader from './ProgressHeader';
 
 const questions = [
@@ -13,6 +14,13 @@ const questions = [
     maxValue: 100,
     step: 1,
   },
+  {
+    id: 2,
+    text: "Please select the hobbies/activities you enjoy in your spare time",
+    options: ["Arts and crafts", "Board games", "Bouldering", "Cars/automotive", "Cooking/Baking", "Gaming", "Gardening", "Lego", "Music", "Outdoor activities", "Programming or other computer-related activities", "Reading", "Sports", "Travelling", "3D printing"],
+    type: 'checkbox',
+    maxSelectable: 5,
+  }
 ];
 
 const Module = () => {
@@ -80,22 +88,13 @@ const Module = () => {
             onChange={handleAnswerChange}
           />
         );
-      case 'single-choice':
+      case 'checkbox':
         return (
-          <div className="flex flex-col space-y-2">
-            {currentQuestion.options.map((option) => (
-              <button
-                key={option}
-                onClick={() => {
-                  handleAnswerChange(option);
-                  handleNext();
-                }}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
-              >
-                {option}
-              </button>
-            ))}
-          </div>
+          <CheckboxQuestion 
+            text={currentQuestion.text}
+            options={currentQuestion.options}
+            maxSelectable={currentQuestion.maxSelectable}
+          />
         );
       default:
         return <div>Unsupported question type</div>;
