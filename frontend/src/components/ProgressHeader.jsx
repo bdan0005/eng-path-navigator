@@ -17,11 +17,11 @@ export default function ProgressHeader({
   };
 
   // pick color for a given segment
-  const getColor = (i) => {
+  const getColor = (index) => {
     if (isComplete) return palette.done;
-    if (i < currentSection) return palette.completed;
-    if (i === currentSection) return palette.current;
-    return palette.pending;
+    if (index - 1 < currentSection) return palette.completed; // completed
+    if (index - 1 === currentSection) return palette.current; // current
+    return palette.pending; // pending
   };
 
   return (

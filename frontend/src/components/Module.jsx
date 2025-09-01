@@ -25,7 +25,7 @@ const questions = [
   {
     id: 3,
     type: 'rank',
-    text: "The following topics were covered in your first-year engineering foundation units. Please rank four content items that you found most interesting.",
+    text: "Please rank four content items that you found most interesting from the first-year engineering foundation units.",
     options: ["Chemical processes (wastewater)", "Circuits", "Coding", "Computer aided design (CAD)", "Data analysis", "Dynamics", "Engineering design", "Materials properties", "Numerical modelling", "Smart systems", "Statics", "3D printing"],
     maxRank: 4,
   }
@@ -119,7 +119,7 @@ const Module = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
-      <ProgressHeader currentSection={currentQuestionIndex}/>
+      <ProgressHeader totalSections={questions.length} currentSection={currentQuestionIndex}/>
       <div className="flex flex-col space-y-4 w-full max-w-3xl py-20">
         {renderQuestion()}
       </div>

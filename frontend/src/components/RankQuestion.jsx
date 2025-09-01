@@ -6,6 +6,7 @@ const RankQuestion = ({ text, options, maxRank = options.length, onChange }) => 
   const handleRankChange = (option, rank) => {
     const updatedRanks = { ...ranks };
 
+    // Remove any option that already has the same rank
     for (let key in updatedRanks) {
       if (updatedRanks[key] === rank) {
         delete updatedRanks[key];
@@ -27,13 +28,20 @@ const RankQuestion = ({ text, options, maxRank = options.length, onChange }) => 
   const rankOptions = Array.from({ length: maxRank }, (_, i) => i + 1);
 
   return (
-    <div className="p-4 w-full max-w-3xl mx-auto space-y-4">
-      <div className="text-2xl font-bold text-black mb-4">{text}</div>
+    <div className="p-4 w-full max-w-3xl mx-auto space-y-6">
+      <div className="text-3xl font-bold text-black mb-6 text-center">{text}</div>
+      <div className="text-sm text-gray-500 text-center">
+        You can rank up to {maxRank} option{maxRank > 1 ? "s" : ""}.
+      </div>
 
-      <div className="space-y-2">
+      {/* Grid layout for 2 columns */}
+      <div className="grid grid-cols-2 gap-6">
         {options.map((option) => (
-          <div key={option} className="flex items-center space-x-4">
-            <span className="w-40 font-semibold">{option}</span>
+          <div
+            key={option}
+            className="flex justify-center items-center space-x-4"
+          >
+            <span className="w-40 text-center font-semibold">{option}</span>
             <select
               value={ranks[option] || ""}
               onChange={(e) => handleRankChange(option, Number(e.target.value))}
@@ -48,10 +56,6 @@ const RankQuestion = ({ text, options, maxRank = options.length, onChange }) => 
             </select>
           </div>
         ))}
-      </div>
-
-      <div className="text-sm text-gray-500">
-        You can rank up to {maxRank} option{maxRank > 1 ? "s" : ""}.
       </div>
     </div>
   );
