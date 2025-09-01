@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Slider from "./Slider"; // your existing Slider component
+import Slider from "./Slider"; 
 
 const SliderQuestion = ({ text, options, min = 0, max = 100, step = 1, onChange }) => {
   const [values, setValues] = useState(
