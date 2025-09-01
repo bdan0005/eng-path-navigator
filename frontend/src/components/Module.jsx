@@ -1,25 +1,33 @@
 import { useState } from 'react';
 import Button from './Button';
+import ProgressHeader from './ProgressHeader';
 import SliderQuestion from './SliderQuestion';
 import CheckboxQuestion from './CheckboxQuestion';
-import ProgressHeader from './ProgressHeader';
+import RankQuestion from './RankQuestion';
 
 const questions = [
   {
     id: 1,
+    type: 'slider',
     text: "What were the results of your ITP Metrics Personality Assessment?",
     options: ["Extraversion", "Emotionality", "Conscientiousness", "Agreeableness", "Openness"],
-    type: 'slider',
     minValue: 0,
     maxValue: 100,
     step: 1,
   },
   {
     id: 2,
-    text: "Please select the hobbies/activities you enjoy in your spare time",
-    options: ["Arts and crafts", "Board games", "Bouldering", "Cars/automotive", "Cooking/Baking", "Gaming", "Gardening", "Lego", "Music", "Outdoor activities", "Programming or other computer-related activities", "Reading", "Sports", "Travelling", "3D printing"],
     type: 'checkbox',
+    text: "Please select the hobbies/activities you enjoy in your spare time.",
+    options: ["Arts and crafts", "Board games", "Bouldering", "Cars/automotive", "Cooking/Baking", "Gaming", "Gardening", "Lego", "Music", "Outdoor activities", "Programming or other computer-related activities", "Reading", "Sports", "Travelling", "3D printing"],
     maxSelectable: 5,
+  },
+  {
+    id: 3,
+    type: 'rank',
+    text: "The following topics were covered in your first-year engineering foundation units. Please rank four content items that you found most interesting.",
+    options: ["Chemical processes (wastewater)", "Circuits", "Coding", "Computer aided design (CAD)", "Data analysis", "Dynamics", "Engineering design", "Materials properties", "Numerical modelling", "Smart systems", "Statics", "3D printing"],
+    maxRank: 4,
   }
 ];
 
@@ -96,6 +104,14 @@ const Module = () => {
             maxSelectable={currentQuestion.maxSelectable}
           />
         );
+      case 'rank':
+        return (
+          <RankQuestion 
+            text={currentQuestion.text}
+            options={currentQuestion.options}
+            maxRank={currentQuestion.maxRank}
+          />
+        );
       default:
         return <div>Unsupported question type</div>;
     }
@@ -107,15 +123,13 @@ const Module = () => {
       <div className="flex flex-col space-y-4 w-full max-w-3xl py-20">
         {renderQuestion()}
       </div>
-      {currentQuestion.type === 'slider' && (
-        <div className="mt-6">
-          <Button
-            type="primary-shadow"
-            text="Next"
-            handleClick={handleNext}
-          />
-        </div>
-      )}
+      <div className="mt-6">
+        <Button
+          type="primary-shadow"
+          text="Next"
+          handleClick={handleNext}
+        />
+      </div>
     </div>
   );
 };

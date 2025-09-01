@@ -22,7 +22,7 @@ const CheckboxQuestion = ({ text, options, maxSelectable = options.length, onCha
 
   return (
     <div className="p-4 w-full max-w-3xl mx-auto space-y-4">
-      <div className="text-2xl font-bold text-black mb-4">{text}</div>
+      <div className="text-3xl font-bold text-black mb-6 text-center">{text}</div>
       {maxSelectable < options.length && (
         <div className="text-sm text-gray-500">
           You can select up to {maxSelectable} option{maxSelectable > 1 ? "s" : ""}.
