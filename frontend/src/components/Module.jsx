@@ -54,6 +54,14 @@ const Module = () => {
     }
   };
 
+  const handleBack = () => {
+    if (currentQuestionIndex > 0 && currentQuestionIndex < questions.length) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    } else {
+      console.log("");
+    }
+  };
+
   if (!started) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
@@ -118,17 +126,31 @@ const Module = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
-      <ProgressHeader totalSections={questions.length} currentSection={currentQuestionIndex}/>
-      <div className="flex flex-col space-y-4 w-full max-w-3xl py-20">
+    <div className="flex flex-col items-center justify-between h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
+      <ProgressHeader 
+        totalSections={questions.length} 
+        currentSection={currentQuestionIndex} 
+      />
+
+      <div className="flex-1 w-full max-w-3xl overflow-y-auto mt-6 mb-6 pt-10">
         {renderQuestion()}
       </div>
-      <div className="mt-6">
-        <Button
-          type="primary-shadow"
-          text="Next"
-          handleClick={handleNext}
-        />
+
+      <div className="w-full max-w-3xl flex justify-center">
+        <div className="px-5">
+          <Button
+            type="primary-shadow"
+            text="Back"
+            handleClick={handleBack}
+          />
+        </div>
+        <div className="px-5">
+          <Button
+            type="primary-shadow"
+            text="Next"
+            handleClick={handleNext}
+          />
+        </div>
       </div>
     </div>
   );
