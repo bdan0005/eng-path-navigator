@@ -6,17 +6,17 @@ export default function Slider({
   value,
   onChange,
 }) {
-  // Creating the tick marker values
-  const ticks = [];
+  // Create all values for the slider (step can be 1, 2, etc.)
+  const allValues = [];
   for (let i = min; i <= max; i += step) {
-    ticks.push(i);
+    allValues.push(i);
   }
 
+  // Only show ticks at multiples of 10
+  const tickValues = allValues.filter((val) => val % 10 === 0);
+
   return (
-    <div
-      className="flex flex-col space-y-2 p-2 items-center"
-      style={{ width: "60vw" }}
-    >
+    <div className="flex flex-col space-y-2 p-2 items-center w-full">
       {/* Range slider */}
       <input
         type="range"
@@ -28,20 +28,22 @@ export default function Slider({
         className="w-full"
         list={markers ? "steplist" : undefined}
       />
+
       {/* Tick values */}
       {markers && (
         <ul className="flex justify-between w-full px-[10px]">
-          {ticks.map((tick) => (
+          {tickValues.map((tick) => (
             <li key={tick} className="flex justify-center relative">
               <span className="absolute text-black text-md">{tick}</span>
             </li>
           ))}
         </ul>
       )}
-      {/* Tick marks */ }
+
+      {/* Tick marks */}
       {markers && (
         <datalist id="steplist">
-          {ticks.map((tick) => (
+          {tickValues.map((tick) => (
             <option key={tick} value={tick} />
           ))}
         </datalist>

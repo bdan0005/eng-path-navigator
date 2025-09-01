@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import Button from './Button';
-import Slider from './Slider';
+import SliderQuestion from './SliderQuestion';
 import ProgressHeader from './ProgressHeader';
 
 const questions = [
   {
     id: 1,
     text: "What were the results of your ITP Metrics Personality Assessment?",
-    options: ["Extraversion", "Emotionality", "Conscientiousness", "Agreeableness", "Openness"]
+    options: ["Extraversion", "Emotionality", "Conscientiousness", "Agreeableness", "Openness"],
+    type: 'slider',
+    minValue: 0,
+    maxValue: 100,
+    step: 1,
   },
 ];
 
@@ -16,27 +20,24 @@ const Module = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
 
-  const handleStart = () => {
-    setStarted(true);
+  const handleStart = () => setStarted(true);
+
+  const handleAnswerChange = (value) => {
+    const currentQuestion = questions[currentQuestionIndex];
+    setAnswers((prev) => ({
+      ...prev,
+      [currentQuestion.id]: value,
+    }));
   };
 
-  const handleAnswerSelect = (option) => {
-    // Save the answer
-    const updatedAnswers = {
-      ...answers,
-      [questions[currentQuestionIndex].id]: option
-    };
-    setAnswers(updatedAnswers);
-
-    // Automatically go to next question (or finish)
+  const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      console.log("Survey complete! User answers:", updatedAnswers);
+      console.log("Survey complete! User answers:", answers);
     }
   };
 
-  // Starting page
   if (!started) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
@@ -64,23 +65,58 @@ const Module = () => {
     );
   }
 
-  // Survey pages
   const currentQuestion = questions[currentQuestionIndex];
+
+  const renderQuestion = () => {
+    switch (currentQuestion.type) {
+      case 'slider':
+        return (
+          <SliderQuestion
+            text={currentQuestion.text}
+            options={currentQuestion.options}
+            min={currentQuestion.minValue}
+            max={currentQuestion.maxValue}
+            step={currentQuestion.step}
+            onChange={handleAnswerChange}
+          />
+        );
+      case 'single-choice':
+        return (
+          <div className="flex flex-col space-y-2">
+            {currentQuestion.options.map((option) => (
+              <button
+                key={option}
+                onClick={() => {
+                  handleAnswerChange(option);
+                  handleNext();
+                }}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        );
+      default:
+        return <div>Unsupported question type</div>;
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
       <ProgressHeader currentSection={currentQuestionIndex}/>
-      <div className="text-3xl font-bold text-black mb-6 text-center">
-        {currentQuestion.text}
+      <div className="flex flex-col space-y-4 w-full max-w-3xl py-20">
+        {renderQuestion()}
       </div>
-
-      <div className="flex flex-col space-y-4">
-        {/* For some reason the slider doesn't go to 0 if you change manually and jumps back to default val */}
-        <Slider 
-          value={answers[currentQuestion.id] || 5}
-          onChange={(value) => setAnswers({ ...answers, [currentQuestion.id]: value })}
-        />
-      </div>
+      {currentQuestion.type === 'slider' && (
+        <div className="mt-6">
+          <Button
+            type="primary-shadow"
+            text="Next"
+            handleClick={handleNext}
+          />
+        </div>
+      )}
     </div>
   );
 };
