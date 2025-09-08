@@ -29,7 +29,7 @@ const CheckboxQuestion = ({ text, options, maxSelectable = options.length, onCha
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-4">
         {options.map((option) => (
           <label
             key={option}
@@ -41,7 +41,7 @@ const CheckboxQuestion = ({ text, options, maxSelectable = options.length, onCha
               type="checkbox"
               checked={selected.includes(option)}
               onChange={() => handleToggle(option)}
-              className="w-5 h-5 accent-blue-600"
+              className="w-5 h-5 min-w-5 min-h-5 accent-blue-600"
             />
             <span className="font-medium">{option}</span>
           </label>
