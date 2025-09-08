@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics.pairwise import cosine_distances
 
 # -------------------------------
 # Load Data
@@ -68,38 +68,30 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # -------------------------------
-# Weighted KNN using cosine distance
+# Random Forest Classifier
 # -------------------------------
-k = 3
-
-def cosine_weighted_knn_predict(X_train, y_train, X_test, k=3):
-    predictions_top1 = []
-    predictions_top3 = []
-
-    for i in range(X_test.shape[0]):
-        x = X_test[i].reshape(1, -1)
-        distances = cosine_distances(x, X_train).flatten()  
-        neighbors_idx = np.argsort(distances)[:k]
-        neighbors_labels = y_train[neighbors_idx]
-        neighbors_weights = 1 / (distances[neighbors_idx] + 1e-6)  # avoid division by zero
-
-        vote_dict = {}
-        for label, w in zip(neighbors_labels, neighbors_weights):
-            vote_dict[label] = vote_dict.get(label, 0) + w
-        sorted_votes = sorted(vote_dict.items(), key=lambda x: x[1], reverse=True)
-        predictions_top1.append(sorted_votes[0][0])
-        predictions_top3.append([label for label, _ in sorted_votes[:3]])
-
-    return predictions_top1, predictions_top3
-
-y_pred_top1, y_pred_top3 = cosine_weighted_knn_predict(X_train_scaled, y_train, X_test_scaled, k=k)
+rf = RandomForestClassifier(
+    n_estimators=200,        # number of trees
+    max_depth=None,          # allow trees to grow fully
+    random_state=42,
+    class_weight="balanced"  # handle uneven class sizes
+)
+rf.fit(X_train_scaled, y_train)
 
 # -------------------------------
 # Accuracy
 # -------------------------------
-top1_accuracy = np.mean(y_pred_top1 == y_test)
-top3_correct = sum(y_test[i] in y_pred_top3[i] for i in range(len(y_test)))
+y_pred = rf.predict(X_test_scaled)
+top1_accuracy = np.mean(y_pred == y_test)
+
+probs = rf.predict_proba(X_test_scaled)
+top3_correct = 0
+for i, row_probs in enumerate(probs):
+    top3_idx = np.argsort(row_probs)[::-1][:3]  # indices of top 3 probabilities
+    top3_labels = rf.classes_[top3_idx]
+    if y_test[i] in top3_labels:
+        top3_correct += 1
 top3_accuracy = top3_correct / len(y_test)
 
-print(f"Top-1 Accuracy: {top1_accuracy:.2%} ({sum(np.array(y_pred_top1) == y_test)}/{len(y_test)})")
+print(f"Top-1 Accuracy: {top1_accuracy:.2%} ({sum(y_pred == y_test)}/{len(y_test)})")
 print(f"Top-3 Accuracy: {top3_accuracy:.2%} ({top3_correct}/{len(y_test)})")
