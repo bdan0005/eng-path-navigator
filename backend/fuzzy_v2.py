@@ -4,249 +4,90 @@ import pandas as pd
 from collections import defaultdict
 
 # -------------------------------
-# Fuzzy Membership Mapping for Labeled Traits
-# -------------------------------
-label_to_membership = {
-    "Low":    (1.0, 0.0, 0.0),
-    "Medium": (0.0, 1.0, 0.0),
-    "High":   (0.0, 0.0, 1.0)
-}
-
-def membership_from_label(label):
-    return label_to_membership.get(label, (0.0, 0.0, 0.0))
-
-# -------------------------------
-# KMeans-Based Fuzzy Set Definition for Numeric Features
-# -------------------------------
-def define_fuzzy_sets(values):
-    values = np.array(values).reshape(-1, 1)
-    kmeans = KMeans(n_clusters=3, random_state=0).fit(values)
-    centers = np.sort(kmeans.cluster_centers_.flatten())
-    return centers
-
-def triangular_membership(x, a, b, c):
-    if x <= a or x >= c:
-        return 0
-    elif x == b:
-        return 1
-    elif x < b:
-        return (x - a) / (b - a)
-    else:
-        return (c - x) / (c - b)
-
-def compute_memberships(values, centers, min_val, max_val):
-    a, b, c = centers
-    memberships = []
-    for x in values:
-        u_low = triangular_membership(x, min_val, a, b)
-        u_med = triangular_membership(x, a, b, c)
-        u_high = triangular_membership(x, b, c, max_val)
-        memberships.append((u_low, u_med, u_high))
-    return memberships
-
-# -------------------------------
 # Load Data
 # -------------------------------
-df = pd.read_csv("survey_results_clean.csv", engine="openpyxl")
+df = pd.read_csv("survey_results_clean.csv")
 
-# -------------------------------
-# Define centers for numeric features only
-# -------------------------------
-cad_centers = define_fuzzy_sets(df['CAD'])
-design_centers = define_fuzzy_sets(df['Design'])
-printing_centers = define_fuzzy_sets(df['3D Printing'])
-teamwork_centers = define_fuzzy_sets(df['Teamwork'])
-coding_centers = define_fuzzy_sets(df['Coding'])
-microcontrollers_centers = define_fuzzy_sets(df['Microcontrollers'])
+# Personality columns
+personality_cols = ["Extraversion", "Emotionality", "Conscientiousness", 
+                    "Agreeableness", "Openness"]
 
-# Get min and max for each numeric feature
-feature_ranges = {
-    'CAD': (df['CAD'].min(), df['CAD'].max()),
-    'Design': (df['Design'].min(), df['Design'].max()),
-    'Printing': (df['3D Printing'].min(), df['3D Printing'].max()),
-    'Teamwork': (df['Teamwork'].min(), df['Teamwork'].max()),
-    'Coding': (df['Coding'].min(), df['Coding'].max()),
-    'Microcontrollers': (df['Microcontrollers'].min(), df['Microcontrollers'].max())
+# Skill ranking columns (1-12)
+skill_cols = ["Chemical Processes", "Circuits", "Coding", "CAD", 
+              "Data Analysis", "Dynamics", "Engineering Design", 
+              "Materials Properties", "Numerical Modelling", 
+              "Smart Systems", "Statics", "3D Printing"]
+
+# Convert skill rankings to 0-100 scale
+for col in skill_cols:
+    df[col] = (13 - df[col]) / 12 * 100
+
+# --- Hobbies handling ---
+# Split multiple hobbies into lists
+df["Hobbies"] = df["Hobbies"].fillna("").apply(lambda x: [h.strip() for h in str(x).split(",")])
+
+# Get all unique hobbies in dataset
+all_hobbies = sorted({h for sublist in df["Hobbies"] for h in sublist if h != ""})
+
+# Create one-hot encoding for hobbies
+for hobby in all_hobbies:
+    df[f"hobby_{hobby}"] = df["Hobbies"].apply(lambda x: 1 if hobby in x else 0)
+
+hobby_cols = [f"hobby_{h}" for h in all_hobbies]
+
+# --- Combine features ---
+all_features = personality_cols + skill_cols + hobby_cols
+
+# Learn average engineering specialisation profiles
+profiles = df.groupby("Engineering Specialisation")[all_features].mean()
+
+# Example new student
+student = {
+    "Extraversion": 55,
+    "Emotionality": 40,
+    "Conscientiousness": 70,
+    "Agreeableness": 60,
+    "Openness": 75,
+    "Chemical Processes": 5,
+    "Circuits": 8,
+    "Coding": 1,
+    "CAD": 6,
+    "Data Analysis": 2,
+    "Dynamics": 7,
+    "Engineering Design": 4,
+    "Materials Properties": 10,
+    "Numerical Modelling": 3,
+    "Smart Systems": 9,
+    "Statics": 11,
+    "3D Printing": 12,
+    "Hobbies": ["Gaming", "Music", "Sports"]  # example multi-choice
 }
 
-# -------------------------------
-# Compute memberships for numeric features
-# -------------------------------
-df[['cad_low', 'cad_med', 'cad_high']] = pd.DataFrame(
-    compute_memberships(df['CAD'], cad_centers, *feature_ranges['CAD'])
-)
-df[['design_low', 'design_med', 'design_high']] = pd.DataFrame(
-    compute_memberships(df['Design'], design_centers, *feature_ranges['Design'])
-)
-df[['printing_low', 'printing_med', 'printing_high']] = pd.DataFrame(
-    compute_memberships(df['3D Printing'], printing_centers, *feature_ranges['Printing'])
-)
-df[['teamwork_low', 'teamwork_med', 'teamwork_high']] = pd.DataFrame(
-    compute_memberships(df['Teamwork'], teamwork_centers, *feature_ranges['Teamwork'])
-)
-df[['coding_low', 'coding_med', 'coding_high']] = pd.DataFrame(
-    compute_memberships(df['Coding'], coding_centers, *feature_ranges['Coding'])
-)
-df[['microcontrollers_low', 'microcontrollers_med', 'microcontrollers_high']] = pd.DataFrame(
-    compute_memberships(df['Microcontrollers'], microcontrollers_centers, *feature_ranges['Microcontrollers'])
-)
+# Convert student skill rankings
+for col in skill_cols:
+    student[col] = (13 - student[col]) / 12 * 100
 
-# -------------------------------
-# Compute membership tuples from labels (already given)
-# -------------------------------
-df['extraversion_memberships'] = df['Extraversion'].apply(membership_from_label)
-df['emotionality_memberships'] = df['Emotionality'].apply(membership_from_label)
-df['conscientiousness_memberships'] = df['Conscientiousness'].apply(membership_from_label)
-df['agreeableness_memberships'] = df['Agreeableness'].apply(membership_from_label)
-df['openness_memberships'] = df['Openness'].apply(membership_from_label)
+# Add hobbies
+for hobby in all_hobbies:
+    student[f"hobby_{hobby}"] = 1 if hobby in student["Hobbies"] else 0
 
-# -------------------------------
-# Build Specialisation Profiles (average fuzzy vectors)
-# -------------------------------
-def build_specialisation_profiles(df):
-    profiles = defaultdict(list)
+# Convert to vector
+student_vec = np.array([student[c] for c in all_features])
 
-    for _, row in df.iterrows():
-        profile = []
+# Cosine similarity
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-        # Numeric features - add their 3 membership values each
-        for prefix in ['cad', 'design', 'printing', 'teamwork', 'coding', 'microcontrollers']:
-            profile += [row[f"{prefix}_low"], row[f"{prefix}_med"], row[f"{prefix}_high"]]
+# Compare student to profiles
+results = {}
+for spec, row in profiles.iterrows():
+    profile_vec = row.values
+    similarity = cosine_similarity(student_vec, profile_vec)
+    results[spec] = similarity
 
-        # Personality traits (already tuples of 3 membership values)
-        for col in ['extraversion_memberships', 'emotionality_memberships',
-                    'conscientiousness_memberships', 'agreeableness_memberships', 'openness_memberships']:
-            profile += list(row[col])
+# Rank results
+ranked = sorted(results.items(), key=lambda x: x[1], reverse=True)
 
-        profiles[row['Current specialisation']].append(profile)
-
-    # Average profiles for each specialisation
-    averaged = {spec: np.mean(vectors, axis=0) for spec, vectors in profiles.items()}
-    return averaged
-
-specialisation_profiles = build_specialisation_profiles(df)
-
-# -------------------------------
-# Create fuzzy vector for a new student input
-# -------------------------------
-def fuzzy_vector_for_student(student_input, centers, feature_ranges):
-    profile = []
-
-    for feat, (a, b, c) in centers.items():
-        x = student_input[feat]
-        min_val, max_val = feature_ranges[feat]
-        mu_low = triangular_membership(x, min_val, a, b)
-        mu_med = triangular_membership(x, a, b, c)
-        mu_high = triangular_membership(x, b, c, max_val)
-        profile += [mu_low, mu_med, mu_high]
-
-    for feat in ['Extraversion', 'Emotionality', 'Conscientiousness', 'Agreeableness', 'Openness']:
-        profile += list(label_to_membership.get(student_input[feat], (0, 0, 0)))
-
-    return np.array(profile)
-
-# -------------------------------
-# Recommend specialisations based on similarity
-# -------------------------------
-def recommend_by_similarity(student_input, centers, specialisation_profiles, feature_ranges, top_n=3):
-    student_vec = fuzzy_vector_for_student(student_input, centers, feature_ranges)
-    similarities = {}
-
-    for spec, profile_vec in specialisation_profiles.items():
-        sim = np.dot(student_vec, profile_vec) / (np.linalg.norm(student_vec) * np.linalg.norm(profile_vec))
-        similarities[spec] = sim
-
-    return sorted(similarities.items(), key=lambda x: x[1], reverse=True)[:top_n]
-
-# -------------------------------
-# Print fuzzy rules for each specialisation
-# -------------------------------
-def print_fuzzy_rules(specialisation_profiles):
-    trait_names = ['CAD', 'Design', '3D Printing', 'Teamwork', 'Coding', 'Microcontrollers',
-                   'Extraversion', 'Emotionality', 'Conscientiousness', 'Agreeableness', 'Openness']
-    
-    labels = ['Low', 'Medium', 'High']
-
-    for spec, profile in specialisation_profiles.items():
-        rule_parts = []
-        for i, trait in enumerate(trait_names):
-            # Each trait has 3 membership values, so index offset is i * 3
-            idx = i * 3
-            values = profile[idx:idx+3]
-            max_label = labels[np.argmax(values)]
-            rule_parts.append(f"{trait} is {max_label}")
-        rule_str = " AND ".join(rule_parts)
-        print(f"IF {rule_str} THEN Specialisation is {spec}\n")
-
-print("\nFuzzy Rules Learned from Data:\n")
-print_fuzzy_rules(specialisation_profiles)
-
-# -------------------------------
-# Example new student input
-# -------------------------------
-new_student = {
-    'CAD': 3,
-    'Design': 5,
-    'Printing': 2,
-    'Teamwork': 1,
-    'Coding': 0,
-    'Microcontrollers': 0,
-    'Extraversion': "Low",
-    'Emotionality': "Low",
-    'Conscientiousness': "Low",
-    'Agreeableness': "Medium",
-    'Openness': "High"
-}
-
-numeric_centers = {
-    'CAD': cad_centers,
-    'Design': design_centers,
-    'Printing': printing_centers,
-    'Teamwork': teamwork_centers,
-    'Coding': coding_centers,
-    'Microcontrollers': microcontrollers_centers
-}
-
-# -------------------------------
-# Get recommendations
-# -------------------------------
-recommendations = recommendations = recommend_by_similarity(new_student, numeric_centers, specialisation_profiles, feature_ranges)
-
-print("\nRecommended specialisations:")
-for spec, score in recommendations:
-    print(f"{spec}: {score:.4f}")
-
-# -------------------------------
-# Evaluate accuracy using the full dataset (no train/test split)
-# -------------------------------
-def evaluate_full_accuracy(df, centers, profiles, feature_ranges):
-    correct = 0
-    total = len(df)
-
-    for _, row in df.iterrows():
-        student_input = {
-            'CAD': row['CAD'],
-            'Design': row['Design'],
-            'Printing': row['3D Printing'],
-            'Teamwork': row['Teamwork'],
-            'Coding': row['Coding'],
-            'Microcontrollers': row['Microcontrollers'],
-            'Extraversion': row['Extraversion'],
-            'Emotionality': row['Emotionality'],
-            'Conscientiousness': row['Conscientiousness'],
-            'Agreeableness': row['Agreeableness'],
-            'Openness': row['Openness']
-        }
-
-        recommendations = recommend_by_similarity(student_input, centers, profiles, feature_ranges, top_n=1)
-        predicted = recommendations[0][0]
-        actual = row['Current specialisation']
-        if predicted == actual:
-            correct += 1
-
-    accuracy = correct / total
-    return accuracy
-
-accuracy = evaluate_full_accuracy(df, numeric_centers, specialisation_profiles, feature_ranges)
-
-print(f"\nTop-1 Accuracy (same data used for training and testing): {accuracy:.2%}")
+print("\nRecommendations:")
+for spec, score in ranked:
+    print(f"{spec:30s} -> {score:.3f}")
