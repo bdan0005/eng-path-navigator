@@ -1,14 +1,34 @@
 import { useState } from 'react';
 import Button from './Button';
-import Slider from './Slider';
 import ProgressHeader from './ProgressHeader';
+import SliderQuestion from './SliderQuestion';
+import CheckboxQuestion from './CheckboxQuestion';
+import RankQuestion from './RankQuestion';
 
 const questions = [
   {
     id: 1,
+    type: 'slider',
     text: "What were the results of your ITP Metrics Personality Assessment?",
-    options: ["Analytical", "Creative", "Practical", "Social"]
+    options: ["Extraversion", "Emotionality", "Conscientiousness", "Agreeableness", "Openness"],
+    minValue: 0,
+    maxValue: 100,
+    step: 1,
   },
+  {
+    id: 2,
+    type: 'checkbox',
+    text: "Please select the hobbies/activities you enjoy in your spare time.",
+    options: ["Arts and crafts", "Board games", "Bouldering", "Cars/automotive", "Cooking/Baking", "Gaming", "Gardening", "Lego", "Music", "Outdoor activities", "Programming or other computer-related activities", "Reading", "Sports", "Travelling", "3D printing"],
+    maxSelectable: 5,
+  },
+  {
+    id: 3,
+    type: 'rank',
+    text: "Please rank four content items that you found most interesting from the first-year engineering foundation units.",
+    options: ["Chemical processes (wastewater)", "Circuits", "Coding", "Computer aided design (CAD)", "Data analysis", "Dynamics", "Engineering design", "Materials properties", "Numerical modelling", "Smart systems", "Statics", "3D printing"],
+    maxRank: 4,
+  }
 ];
 
 const Module = () => {
@@ -16,27 +36,32 @@ const Module = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
 
-  const handleStart = () => {
-    setStarted(true);
+  const handleStart = () => setStarted(true);
+
+  const handleAnswerChange = (value) => {
+    const currentQuestion = questions[currentQuestionIndex];
+    setAnswers((prev) => ({
+      ...prev,
+      [currentQuestion.id]: value,
+    }));
   };
 
-  const handleAnswerSelect = (option) => {
-    // Save the answer
-    const updatedAnswers = {
-      ...answers,
-      [questions[currentQuestionIndex].id]: option
-    };
-    setAnswers(updatedAnswers);
-
-    // Automatically go to next question (or finish)
+  const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      console.log("Survey complete! User answers:", updatedAnswers);
+      console.log("Survey complete! User answers:", answers);
     }
   };
 
-  // Starting page
+  const handleBack = () => {
+    if (currentQuestionIndex > 0 && currentQuestionIndex < questions.length) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    } else {
+      console.log("");
+    }
+  };
+
   if (!started) {
     return (
       <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
@@ -64,30 +89,68 @@ const Module = () => {
     );
   }
 
-  // Survey pages
   const currentQuestion = questions[currentQuestionIndex];
 
+  const renderQuestion = () => {
+    switch (currentQuestion.type) {
+      case 'slider':
+        return (
+          <SliderQuestion
+            text={currentQuestion.text}
+            options={currentQuestion.options}
+            min={currentQuestion.minValue}
+            max={currentQuestion.maxValue}
+            step={currentQuestion.step}
+            onChange={handleAnswerChange}
+          />
+        );
+      case 'checkbox':
+        return (
+          <CheckboxQuestion 
+            text={currentQuestion.text}
+            options={currentQuestion.options}
+            maxSelectable={currentQuestion.maxSelectable}
+          />
+        );
+      case 'rank':
+        return (
+          <RankQuestion 
+            text={currentQuestion.text}
+            options={currentQuestion.options}
+            maxRank={currentQuestion.maxRank}
+          />
+        );
+      default:
+        return <div>Unsupported question type</div>;
+    }
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
-      <ProgressHeader currentSection={currentQuestionIndex}/>
-      <div className="text-3xl font-bold text-black mb-6 text-center">
-        {currentQuestion.text}
+    <div className="flex flex-col items-center justify-between h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
+      <ProgressHeader 
+        totalSections={questions.length} 
+        currentSection={currentQuestionIndex} 
+      />
+
+      <div className="flex-1 w-full max-w-3xl overflow-y-auto mt-6 mb-6 pt-10">
+        {renderQuestion()}
       </div>
 
-      <div className="flex flex-col space-y-4">
-        {currentQuestion.options.map((option) => (
-          <button
-            key={option}
-            className={`px-6 py-3 rounded-lg border transition ${
-              answers[currentQuestion.id] === option
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-black hover:bg-blue-100'
-            }`}
-            onClick={() => handleAnswerSelect(option)}
-          >
-            {option}
-          </button>
-        ))}
+      <div className="w-full max-w-3xl flex justify-center">
+        <div className="px-5">
+          <Button
+            type="primary-shadow"
+            text="Back"
+            handleClick={handleBack}
+          />
+        </div>
+        <div className="px-5">
+          <Button
+            type="primary-shadow"
+            text="Next"
+            handleClick={handleNext}
+          />
+        </div>
       </div>
     </div>
   );
