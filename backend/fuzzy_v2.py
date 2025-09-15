@@ -3,6 +3,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_distances
+from sklearn.decomposition import PCA
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+from collections import Counter
 
 # -------------------------------
 # Load Data
@@ -81,7 +86,7 @@ def cosine_weighted_knn_predict(X_train, y_train, X_test, k=3):
         distances = cosine_distances(x, X_train).flatten()  
         neighbors_idx = np.argsort(distances)[:k]
         neighbors_labels = y_train[neighbors_idx]
-        neighbors_weights = 1 / (distances[neighbors_idx] + 1e-6)  # avoid division by zero
+        neighbors_weights = 1 / (distances[neighbors_idx] + 1e-6)  # avoid div by 0
 
         vote_dict = {}
         for label, w in zip(neighbors_labels, neighbors_weights):
@@ -103,3 +108,48 @@ top3_accuracy = top3_correct / len(y_test)
 
 print(f"Top-1 Accuracy: {top1_accuracy:.2%} ({sum(np.array(y_pred_top1) == y_test)}/{len(y_test)})")
 print(f"Top-3 Accuracy: {top3_accuracy:.2%} ({top3_correct}/{len(y_test)})")
+
+# -------------------------------
+# Visualizations
+# -------------------------------
+
+# 1. Clusters of specialisations (PCA projection)
+pca = PCA(n_components=2)
+X_train_pca = pca.fit_transform(X_train_scaled)
+
+plt.figure(figsize=(10, 7))
+for spec in np.unique(y_train):
+    idx = (y_train == spec)
+    plt.scatter(X_train_pca[idx, 0], X_train_pca[idx, 1], label=spec, alpha=0.6)
+plt.title("Clusters of Engineering Specialisations (PCA Projection)")
+plt.xlabel("PC1")
+plt.ylabel("PC2")
+plt.legend()
+plt.show()
+
+# 2. Distribution of Top-1 predicted specialisations
+plt.figure(figsize=(10, 6))
+sns.countplot(x=y_pred_top1, order=pd.Series(y_pred_top1).value_counts().index)
+plt.title("Distribution of Top-1 Predicted Specialisations")
+plt.xticks(rotation=45)
+plt.show()
+
+# 3. Confusion matrix of predictions
+cm = confusion_matrix(y_test, y_pred_top1, labels=np.unique(y_train))
+plt.figure(figsize=(12, 8))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",
+            xticklabels=np.unique(y_train), yticklabels=np.unique(y_train))
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix of Specialisation Predictions")
+plt.show()
+
+# 4. Frequency of specialisations in Top-3 recommendations
+top3_flat = [s for sublist in y_pred_top3 for s in sublist]
+top3_counts = Counter(top3_flat)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=list(top3_counts.keys()), y=list(top3_counts.values()))
+plt.xticks(rotation=45)
+plt.title("Frequency of Specialisations in Top-3 Recommendations")
+plt.show()
