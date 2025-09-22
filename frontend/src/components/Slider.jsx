@@ -1,3 +1,5 @@
+import { useRef, useEffect, useState } from "react";
+
 export default function Slider({
   min = 0,
   max = 10,
@@ -15,8 +17,44 @@ export default function Slider({
   // Only show ticks at multiples of 10
   const tickValues = allValues.filter((val) => val % 10 === 0);
 
+  // Ref and state for slider width
+  const sliderRef = useRef(null);
+  const [sliderWidth, setSliderWidth] = useState(0);
+  const horizontalPadding = 10;
+
+  useEffect(() => {
+    if (sliderRef.current) {
+      setSliderWidth(sliderRef.current.offsetWidth);
+    }
+    // Update on window resize
+    const handleResize = () => {
+      if (sliderRef.current) {
+        setSliderWidth(sliderRef.current.offsetWidth);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const percent = (value - min) / (max - min);
+  const thumbReach = sliderWidth - 2 * horizontalPadding;
+  const leftPx = horizontalPadding + percent * thumbReach;
+
   return (
     <div className="flex flex-col space-y-2 p-2 items-center w-full">
+      {/* Value indicator above slider */}
+      <div className="relative w-full mb-2 px-4" ref={sliderRef}>
+        <span
+          className="absolute -top-4 text-black font-bold pointer-events-none"
+          style={{
+            left: `${leftPx}px`,
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {value}
+        </span>
+      </div>
+
       {/* Range slider */}
       <input
         type="range"
@@ -25,7 +63,7 @@ export default function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full"
+        className="w-full px-4"
         list={markers ? "steplist" : undefined}
       />
 

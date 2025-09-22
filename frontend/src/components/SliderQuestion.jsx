@@ -25,13 +25,13 @@ const SliderQuestion = ({ text, options, min = 0, max = 100, step = 1, onChange 
         {options.map((option) => (
           <div 
             key={option} 
-            className="flex flex-wrap items-center space-x-2 sm:space-x-4"
+            className="flex flex-col p-2 md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4"
           >
-            <span className="flex-shrink-0 w-24 sm:w-40 font-semibold">
+            <span className="flex-shrink-0 w-24 sm:w-40 font-semibold text-center md:text-left">
               {option}
             </span>
 
-            <div className="flex-1 min-w-[120px]">
+            <div className="flex-1 min-w-[275px] w-full md:w-auto">
               <Slider
                 min={min}
                 max={max}
@@ -40,10 +40,6 @@ const SliderQuestion = ({ text, options, min = 0, max = 100, step = 1, onChange 
                 onChange={(val) => handleChange(option, val)}
               />
             </div>
-
-            <span className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-blue text-white font-semibold rounded-full border border-gray-300">
-              {values[option]}
-            </span>
           </div>
         ))}
       </div>

@@ -35,7 +35,7 @@ const RankQuestion = ({ text, options, maxRank = options.length, onChange }) => 
       </div>
 
       {/* Grid layout for 2 columns */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid sm:grid-cols-2 gap-6">
         {options.map((option) => (
           <div
             key={option}
