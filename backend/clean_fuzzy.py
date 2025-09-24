@@ -60,20 +60,43 @@ hobbies = [c for c in df.columns if c.startswith("hobby_")]
 target = "Engineering Specialisation"
 
 # --- Heatmaps to visualise ---
+# Personality traits vs Specialisation
 plt.figure(figsize=(12, 6))
 sns.heatmap(
     df.groupby(target)[personality_traits].mean(),
     annot=True, cmap="coolwarm", cbar=True
 )
 plt.title("Average Personality Traits by Specialisation")
+plt.tight_layout()
 plt.show()
 
+# Content interest/skills vs Specialisation
 plt.figure(figsize=(12, 6))
 sns.heatmap(
     df.groupby(target)[skills].mean(),
     annot=True, cmap="YlGnBu", cbar=True
 )
 plt.title("Average Skills by Specialisation")
+plt.tight_layout()
+plt.show()
+
+# Hobbies vs Specialisation
+plt.figure(figsize=(12, 6))
+# Exclude "hobby_Other" from the heatmap if it's always 1 (no variance)
+hobbies_for_heatmap = [h for h in hobbies if h != "hobby_Other"]
+
+sns.heatmap(
+    df.groupby(target)[hobbies_for_heatmap].mean(),
+    annot=True, cmap="BuPu", cbar=True
+)
+plt.xticks(
+    ticks=np.arange(len(hobbies_for_heatmap)) + 0.5,
+    labels=[h.replace("hobby_", "").replace("_", " ") for h in hobbies_for_heatmap],
+    rotation=45,
+    ha="right"
+)
+plt.title("Average Hobbies by Specialisation")
+plt.tight_layout()
 plt.show()
 
 # --- Fuzzy-style predictor ---
