@@ -168,17 +168,47 @@ print(full_ranking)
 
 all_rankings = []
 
-for i in range(11): # First 10 students in test set, but can change to len(X_test)
-    proba = y_pred_proba[i]
-    ranking = pd.DataFrame({
-        "Specialisation": clf.classes_,
-        "Match %": (proba * 100).round(2)
-    }).sort_values("Match %", ascending=False).reset_index(drop=True)
-    all_rankings.append(ranking)
+# for i in range(11): # First 10 students in test set, but can change to len(X_test)
+#     proba = y_pred_proba[i]
+#     ranking = pd.DataFrame({
+#         "Specialisation": clf.classes_,
+#         "Match %": (proba * 100).round(2)
+#     }).sort_values("Match %", ascending=False).reset_index(drop=True)
+#     all_rankings.append(ranking)
 
-    # Example: print top-3 for student 0
-    print(f"\nRanked Recommendations for Student {i}:")
-    print(all_rankings[i].head(10))
+#     # Example: print top-3 for student 0
+#     print(f"\nRanked Recommendations for Student {i}:")
+#     print(all_rankings[i].head(10))
 
 
+# Getting the coefficients of the model after fitting the model
+print("Coefficients shape:", clf.coef_.shape)
+print("Intercepts shape:", clf.intercept_.shape)
 
+# Feature names
+feature_names = df[personality_traits + skills + hobbies].columns
+
+# Print coefficients for each class
+for idx, class_label in enumerate(clf.classes_):
+    print(f"\nClass: {class_label}")
+    for feature, coef in zip(feature_names, clf.coef_[idx]):
+        print(f"{feature}: {coef:.4f}")
+
+# Print intercepts for each class
+print("\nIntercepts (log-odds) for each class:")
+for idx, class_label in enumerate(clf.classes_):
+    print(f"{class_label}: {clf.intercept_[idx]:.4f}")
+
+# Create a DataFrame of coefficients
+coef_df = pd.DataFrame(clf.coef_, index=clf.classes_, columns=feature_names)
+# Remove hobby_ prefix from hobby list
+pretty_feature_names = [f.replace("hobby_", "") for f in feature_names]
+coef_df.columns = pretty_feature_names
+
+plt.figure(figsize=(18, 6))
+sns.heatmap(coef_df, annot=True, cmap="coolwarm", center=0, cbar=True)
+plt.title("Logistic Regression Coefficient Heatmap (Features vs Specialisations)")
+plt.xlabel("Feature")
+plt.ylabel("Specialisation")
+plt.tight_layout()
+plt.show()
