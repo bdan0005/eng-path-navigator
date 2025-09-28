@@ -62,4 +62,4 @@ def predict(student: Student):
         reverse=True
     )
 
-    return {"ranking": ranking, "top3": ranking[:3]}
+    return {"ranking": ranking}
