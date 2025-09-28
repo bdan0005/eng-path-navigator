@@ -1,5 +1,9 @@
 from pydantic import BaseModel
 
-class User(BaseModel):
-    name: str
-    age: int
+class Student(BaseModel):
+    extraversion: float
+    emotionality: float
+    conscientiousness: float
+    agreeableness: float
+    openness: float
+    
