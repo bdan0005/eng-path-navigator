@@ -123,9 +123,11 @@ y_pred_proba = clf.predict_proba(X_test)
 # Evaluation
 acc_top1 = accuracy_score(y_test, y_pred)
 acc_top3 = top_k_accuracy_score(y_test, y_pred_proba, k=3, labels=clf.classes_)
+acc_top5 = top_k_accuracy_score(y_test, y_pred_proba, k=5, labels=clf.classes_)
 
 print(f"Prediction Accuracy @1: {acc_top1:.2f}")
 print(f"Prediction Accuracy @3: {acc_top3:.2f}")
+print(f"Prediction Accuracy @5: {acc_top5:.2f}")
 
 # Recommender function
 def recommend_specialisation(student_features, model, scaler, classes, top_n=3):
