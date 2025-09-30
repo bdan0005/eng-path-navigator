@@ -20,7 +20,7 @@ const questions = [
     id: 2,
     type: 'checkbox',
     text: "Please select the hobbies/activities you enjoy in your spare time.",
-    options: ["Arts and crafts", "Board games", "Bouldering", "Cars/automotive", "Cooking/Baking", "Gaming", "Gardening", "Lego", "Music", "Outdoor activities", "Programming or other computer-related activities", "Reading", "Sports", "Travelling", "3D printing"],
+    options: ["Arts and crafts", "Board games", "Bouldering", "Cars/automotive", "Cooking/Baking", "Gaming", "Gardening", "Lego", "Music", "Outdoor activities (e.g. hiking)", "Programming or other computer-related activities", "Reading", "Sports", "Travelling", "3D printing"],
     maxSelectable: 5,
   },
   {
@@ -37,7 +37,7 @@ const Module = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
   const [completed, setCompleted] = useState(false);
-  const [ranking, setRanking] = useState(null);
+  const [ranking, setRanking] = useState([]);
 
   const handleStart = () => setStarted(true);
 
@@ -59,7 +59,7 @@ const Module = () => {
       try {
         const data = await recommend(studentData);
         console.log("Recommendation ranking:", data.ranking);
-        setRanking(data);
+        setRanking(data.ranking);
         setCompleted(true);
       } catch (error) {
         console.error("Error:", error);
@@ -78,9 +78,9 @@ const Module = () => {
   const buildStudentData = (answers) => {
     const personality = answers[1] || {};
     const hobbies = answers[2] || [];
-    const rankObj = answers[3] || {};
+    const interestRanks = answers[3] || {}; // <- default to empty object
 
-    const interests = Object.entries(rankObj)
+    const interests = Object.entries(interestRanks)
       .sort(([, rankA], [, rankB]) => rankA - rankB)
       .map(([interest]) => interest);
 
@@ -101,11 +101,11 @@ const Module = () => {
         <div className="space-y-6 max-w-2xl text-center">
           <h1 className="text-4xl font-bold">Your Recommendations</h1>
           
-          {ranking ? (
+          {ranking.length > 0 ? (
             <div className="space-y-3">
               <p className="text-lg">Here are your top 3 matches:</p>
               <ul className="list-decimal list-inside space-y-2">
-                {ranking.top3.map(([spec, score], idx) => (
+                {ranking.slice(0, 3).map(([spec, score], idx) => (
                   <li key={idx} className="text-xl font-medium">
                     {spec} - {score}%
                   </li>

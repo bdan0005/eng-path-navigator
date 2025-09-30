@@ -22,12 +22,7 @@ personality_features = ["Extraversion", "Emotionality", "Conscientiousness", "Ag
 interests_features = ["Chemical Processes", "Circuits", "Coding", "CAD", "Data Analysis", "Dynamics",
                    "Engineering Design", "Materials Properties", "Numerical Modelling", "Smart Systems",
                    "Statics", "3D Printing"]
-hobbies_features = [
-    "hobby_Arts_and_crafts", "hobby_Board_games", "hobby_Bouldering", "hobby_Cars/automotive",
-    "hobby_Cooking/Baking", "hobby_Gaming", "hobby_Gardening", "hobby_Lego", "hobby_Music",
-    "hobby_Outdoor_activities_(e.g._hiking)", "hobby_Programming_or_other_computer-related_activities",
-    "hobby_Reading", "hobby_Sports", "hobby_Travelling", "hobby_3D_printing", "hobby_Other"
-]
+hobbies_features = ['hobby_3D_printing', 'hobby_Arts_and_crafts', 'hobby_Board_games', 'hobby_Bouldering', 'hobby_Cars/automotive', 'hobby_Cooking/Baking', 'hobby_Gaming', 'hobby_Gardening', 'hobby_Lego', 'hobby_Music', 'hobby_Other', 'hobby_Outdoor_activities_(e.g._hiking)', 'hobby_Programming_or_other_computer-related_activities', 'hobby_Reading', 'hobby_Sports', 'hobby_Travelling']
 
 features = personality_features + interests_features + hobbies_features
 
