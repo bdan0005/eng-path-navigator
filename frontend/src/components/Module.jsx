@@ -4,6 +4,7 @@ import ProgressHeader from './ProgressHeader';
 import SliderQuestion from './SliderQuestion';
 import CheckboxQuestion from './CheckboxQuestion';
 import RankQuestion from './RankQuestion';
+import { recommend } from "../services/recommendApi";
 
 const questions = [
   {
@@ -35,6 +36,8 @@ const Module = () => {
   const [started, setStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState({});
+  const [completed, setCompleted] = useState(false);
+  const [ranking, setRanking] = useState(null);
 
   const handleStart = () => setStarted(true);
 
@@ -46,11 +49,21 @@ const Module = () => {
     }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       console.log("Survey complete! User answers:", answers);
+      const studentData = buildStudentData(answers);
+
+      try {
+        const data = await recommend(studentData);
+        console.log("Recommendation ranking:", data.ranking);
+        setRanking(data);
+        setCompleted(true);
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
   };
 
@@ -61,6 +74,63 @@ const Module = () => {
       console.log("");
     }
   };
+
+  const buildStudentData = (answers) => {
+    const personality = answers[1] || {};
+    const hobbies = answers[2] || [];
+    const rankObj = answers[3] || {};
+
+    const interests = Object.entries(rankObj)
+      .sort(([, rankA], [, rankB]) => rankA - rankB)
+      .map(([interest]) => interest);
+
+    return {
+      extraversion: personality["Extraversion"] || 0,
+      emotionality: personality["Emotionality"] || 0,
+      conscientiousness: personality["Conscientiousness"] || 0,
+      agreeableness: personality["Agreeableness"] || 0,
+      openness: personality["Openness"] || 0,
+      hobbies,
+      interests
+    };
+  };
+
+  if (completed) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-black p-10 rounded-2xl shadow-sm">
+        <div className="space-y-6 max-w-2xl text-center">
+          <h1 className="text-4xl font-bold">Your Recommendations</h1>
+          
+          {ranking ? (
+            <div className="space-y-3">
+              <p className="text-lg">Here are your top 3 matches:</p>
+              <ul className="list-decimal list-inside space-y-2">
+                {ranking.top3.map(([spec, score], idx) => (
+                  <li key={idx} className="text-xl font-medium">
+                    {spec} - {score}%
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p>Loading your results...</p>
+          )}
+
+          <Button
+            type="primary-shadow"
+            text="Restart Quiz"
+            handleClick={() => {
+              setAnswers({});
+              setRanking(null);
+              setCompleted(false);
+              setStarted(false);
+              setCurrentQuestionIndex(0);
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (!started) {
     return (
@@ -110,6 +180,7 @@ const Module = () => {
             text={currentQuestion.text}
             options={currentQuestion.options}
             maxSelectable={currentQuestion.maxSelectable}
+            onChange={handleAnswerChange}
           />
         );
       case 'rank':
@@ -118,6 +189,7 @@ const Module = () => {
             text={currentQuestion.text}
             options={currentQuestion.options}
             maxRank={currentQuestion.maxRank}
+            onChange={handleAnswerChange}
           />
         );
       default:

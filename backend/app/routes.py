@@ -1,18 +1,23 @@
 from fastapi import APIRouter
 import joblib
+import os
 import pandas as pd
-from models import Student
+from app.models import Student
 
 router = APIRouter()
 
 # Load model
-clf = joblib.load("model/pred_model.pkl")
-scaler = joblib.load("model/scaler.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "model")
+
+clf = joblib.load(os.path.join(MODEL_DIR, "pred_model.pkl"))
+scaler = joblib.load(os.path.join(MODEL_DIR, "scaler.pkl"))
 
 @router.get("/hello")
 def say_hello():
     return {"message": "Hello from FastAPI route!"}
 
+# API function - getting recommendations
 personality_features = ["Extraversion", "Emotionality", "Conscientiousness", "Agreeableness", "Openness"]
 interests_features = ["Chemical Processes", "Circuits", "Coding", "CAD", "Data Analysis", "Dynamics",
                    "Engineering Design", "Materials Properties", "Numerical Modelling", "Smart Systems",
@@ -20,14 +25,14 @@ interests_features = ["Chemical Processes", "Circuits", "Coding", "CAD", "Data A
 hobbies_features = [
     "hobby_Arts_and_crafts", "hobby_Board_games", "hobby_Bouldering", "hobby_Cars/automotive",
     "hobby_Cooking/Baking", "hobby_Gaming", "hobby_Gardening", "hobby_Lego", "hobby_Music",
-    "hobby_Outdoor_activities", "hobby_Programming_or_other_computer-related_activities",
-    "hobby_Reading", "hobby_Sports", "hobby_Travelling", "hobby_3D_printing"
+    "hobby_Outdoor_activities_(e.g._hiking)", "hobby_Programming_or_other_computer-related_activities",
+    "hobby_Reading", "hobby_Sports", "hobby_Travelling", "hobby_3D_printing", "hobby_Other"
 ]
 
 features = personality_features + interests_features + hobbies_features
 
-@router.post("/predict")
-def predict(student: Student):
+@router.post("/recommend")
+def recommend(student: Student):
     personality_values = [
         student.extraversion / 100,
         student.emotionality / 100,
@@ -39,7 +44,7 @@ def predict(student: Student):
     interests_dict = {s: 0 for s in interests_features}
     for i, interest in enumerate(student.interests):
         if interest in interests_features:
-            interests_dict[interest] = (len(student.skills_ranked) - i) / len(student.interests)
+            interests_dict[interest] = (len(student.interests) - i) / len(student.interests)
 
     interests_values = [interests_dict[s] for s in interests_features]
 
