@@ -18,6 +18,7 @@
 ### Backend
 ```
 cd backend
+venv/bin/activate # OR venv/Scripts/activate depending on OS
 uvicorn main:app --reload
 ```
 To access SwaggerUI, check %BASE_URL%/docs.
