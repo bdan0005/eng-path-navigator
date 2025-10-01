@@ -1,4 +1,5 @@
 import React from "react";
+import { ReactComponent as Tick } from "../assets/tick.svg";
 
 export default function ProgressHeader({
   totalSections = 5,   // how many segments in the bar
@@ -10,9 +11,8 @@ export default function ProgressHeader({
   // colors for each state
   const palette = {
     completed: "#1F2429",
-    // current: "#C5CBD1",
-    current: "#007AFF", // so i can see the diff
-    pending: "rgba(31, 36, 41, 0.2)",
+    current: "#97abbaff",
+    pending: "#1f242933",
     done: "#40C95E",
   };
 
@@ -65,30 +65,23 @@ export default function ProgressHeader({
         })}
       </div>
 
-      {/* show a checkmark badge when all sections are done */}
-      {isComplete && (
-        <div
-          aria-hidden
-          title="Completed"
-          style={{
-            position: "absolute",
-            right: 0,
-            top: "50%",
-            transform: "translate(50%, -50%)", // nudges it outside the bar
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            background: palette.done,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 18,
-            color: "#fff",
-          }}
-        >
-          ✓
-        </div>
-      )}
+      <div
+        title="Completed"
+        style={{
+          position: "absolute",
+          right: 0,
+          top: "50%",
+          transform: "translate(50%, -50%)", // nudges it outside the bar
+          width: 32,
+          height: 32,
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Tick width={20} height={20} />
+      </div>
     </div>
   );
 }

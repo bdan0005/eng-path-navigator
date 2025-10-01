@@ -5,6 +5,8 @@ import SliderQuestion from './SliderQuestion';
 import CheckboxQuestion from './CheckboxQuestion';
 import RankQuestion from './RankQuestion';
 import { recommend } from "../services/recommendApi";
+import { ReactComponent as ArrowLeft } from "../assets/arrow-left-blk.svg";
+import { ReactComponent as ArrowRight } from "../assets/arrow-right-wht.svg";
 
 const questions = [
   {
@@ -68,10 +70,12 @@ const Module = () => {
   };
 
   const handleBack = () => {
-    if (currentQuestionIndex > 0 && currentQuestionIndex < questions.length) {
+    if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     } else {
-      console.log("");
+      setStarted(false);
+      setAnswers({});
+      setCurrentQuestionIndex(0);
     }
   };
 
@@ -97,7 +101,7 @@ const Module = () => {
 
   if (completed) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-black p-10 rounded-2xl shadow-sm">
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-black p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
         <div className="space-y-6 max-w-2xl text-center">
           <h1 className="text-4xl font-bold">Your Recommendations</h1>
           
@@ -140,7 +144,7 @@ const Module = () => {
             <div className="text-center text-black text-5xl font-bold whitespace-pre-line leading-normal">
               {"Engineering Pathways\nNavigator"}
             </div>
-            <div className="text-center text-black text-base font-medium whitespace-pre-line leading-normal">
+            <div className="text-center text-black text-lg font-medium whitespace-pre-line leading-normal">
               {"Take this short quiz to find what specialisation suits\nyou best."}
             </div>
           </div>
@@ -150,8 +154,10 @@ const Module = () => {
               text='Get started'
               minHeight={70}
               fitContainerHeight={true}
-              textSize='text-md'
+              textSize='text-lg'
               handleClick={handleStart}
+              size='lg'
+              rounded='2xl'
             />
           </div>
         </div>
@@ -198,7 +204,7 @@ const Module = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm">
+    <div className="flex flex-col items-center justify-between h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
       <ProgressHeader 
         totalSections={questions.length} 
         currentSection={currentQuestionIndex} 
@@ -211,16 +217,18 @@ const Module = () => {
       <div className="w-full max-w-3xl flex justify-center">
         <div className="px-5">
           <Button
-            type="primary-shadow"
-            text="Back"
+            type="secondary"
+            icon={<ArrowLeft />}
             handleClick={handleBack}
           />
         </div>
         <div className="px-5">
           <Button
-            type="primary-shadow"
-            text="Next"
+            type="tertiary"
+            icon={<ArrowRight />}
             handleClick={handleNext}
+            size="md"
+            rounded="full"
           />
         </div>
       </div>

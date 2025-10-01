@@ -20,6 +20,10 @@ const TopBar = () => {
       <Button 
         type="primary" 
         text="Contact us"
+        textSize="text-md"
+        size="sm"
+        rounded="2xl"
+        minHeight={40}
       />
     </div>
   );
