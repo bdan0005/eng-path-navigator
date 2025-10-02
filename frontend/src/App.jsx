@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TopBar from './components/TopBar';
 import Module from './components/Module';
-import Specialisations from './components/Specialisations';
 
 function App() {
   return (
@@ -12,7 +11,6 @@ function App() {
         </div>
         <Routes>
           <Route path="/" element={<Module />} />
-          <Route path="/specialisations" element={<Specialisations />} />
         </Routes>
       </div>
     </Router>

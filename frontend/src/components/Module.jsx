@@ -3,6 +3,7 @@ import Button from './Button';
 import ProgressHeader from './ProgressHeader';
 import SliderQuestion from './SliderQuestion';
 import CheckboxQuestion from './CheckboxQuestion';
+import Recommendations from './Recommendations';
 import RankQuestion from './RankQuestion';
 import { recommend } from "../services/recommendApi";
 import { ReactComponent as ArrowLeft } from "../assets/arrow-left-blk.svg";
@@ -55,12 +56,9 @@ const Module = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      console.log("Survey complete! User answers:", answers);
       const studentData = buildStudentData(answers);
-
       try {
         const data = await recommend(studentData);
-        console.log("Recommendation ranking:", data.ranking);
         setRanking(data.ranking);
         setCompleted(true);
       } catch (error) {
@@ -82,11 +80,11 @@ const Module = () => {
   const buildStudentData = (answers) => {
     const personality = answers[1] || {};
     const hobbies = answers[2] || [];
-    const interestRanks = answers[3] || {}; // <- default to empty object
+    const interestRanks = answers[3] || {};
 
     const interests = Object.entries(interestRanks)
-      .sort(([, rankA], [, rankB]) => rankA - rankB)
-      .map(([interest]) => interest);
+      .sort(([, a], [, b]) => a - b)
+      .map(([key]) => key);
 
     return {
       extraversion: personality["Extraversion"] || 0,
@@ -99,22 +97,17 @@ const Module = () => {
     };
   };
 
-  if (completed) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-black p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
-        <div className="space-y-6 max-w-2xl text-center">
+  const renderQuestion = () => {
+    if (completed) {
+      return (
+        <div className="space-y-6 w-full text-center">
           <h1 className="text-4xl font-bold">Your Recommendations</h1>
-          
+
           {ranking.length > 0 ? (
-            <div className="space-y-3">
-              <p className="text-lg">Here are your top 3 matches:</p>
-              <ul className="list-decimal list-inside space-y-2">
-                {ranking.slice(0, 3).map(([spec, score], idx) => (
-                  <li key={idx} className="text-xl font-medium">
-                    {spec} - {score}%
-                  </li>
-                ))}
-              </ul>
+            <div className="w-full overflow-y-auto">
+              <div className="w-full max-w-[1200px] mx-auto">
+                <Recommendations specialisations={ranking} />
+              </div>
             </div>
           ) : (
             <p>Loading your results...</p>
@@ -132,42 +125,11 @@ const Module = () => {
             }}
           />
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (!started) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
-        <div className="space-y-6">
-          <div className="space-y-3">
-            <div className="text-center text-black text-5xl font-bold whitespace-pre-line leading-normal">
-              {"Engineering Pathways\nNavigator"}
-            </div>
-            <div className="text-center text-black text-lg font-medium whitespace-pre-line leading-normal">
-              {"Take this short quiz to find what specialisation suits\nyou best."}
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <Button 
-              type='primary-shadow'
-              text='Get started'
-              minHeight={70}
-              fitContainerHeight={true}
-              textSize='text-lg'
-              handleClick={handleStart}
-              size='lg'
-              rounded='2xl'
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
+    const currentQuestion = questions[currentQuestionIndex];
 
-  const currentQuestion = questions[currentQuestionIndex];
-
-  const renderQuestion = () => {
     switch (currentQuestion.type) {
       case 'slider':
         return (
@@ -182,7 +144,7 @@ const Module = () => {
         );
       case 'checkbox':
         return (
-          <CheckboxQuestion 
+          <CheckboxQuestion
             text={currentQuestion.text}
             options={currentQuestion.options}
             maxSelectable={currentQuestion.maxSelectable}
@@ -191,7 +153,7 @@ const Module = () => {
         );
       case 'rank':
         return (
-          <RankQuestion 
+          <RankQuestion
             text={currentQuestion.text}
             options={currentQuestion.options}
             maxRank={currentQuestion.maxRank}
@@ -203,37 +165,69 @@ const Module = () => {
     }
   };
 
+  if (!started) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <div className="text-center text-black text-5xl font-bold whitespace-pre-line leading-normal">
+              {"Engineering Pathways\nNavigator"}
+            </div>
+            <div className="text-center text-black text-lg font-medium whitespace-pre-line leading-normal">
+              {"Take this short quiz to find what specialisation suits\nyou best."}
+            </div>
+          </div>
+          <div className="flex justify-center">
+            <Button
+              type="primary-shadow"
+              text="Get started"
+              minHeight={70}
+              fitContainerHeight={true}
+              textSize="text-lg"
+              handleClick={handleStart}
+              size="lg"
+              rounded="2xl"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-between h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
-      <ProgressHeader 
-        totalSections={questions.length} 
-        currentSection={currentQuestionIndex} 
+      <ProgressHeader
+        totalSections={questions.length}
+        currentSection={currentQuestionIndex}
       />
 
       <div className="flex-1 w-full max-w-3xl overflow-y-auto mt-6 mb-6 pt-10">
         {renderQuestion()}
       </div>
 
-      <div className="w-full max-w-3xl flex justify-center">
-        <div className="px-5">
-          <Button
-            type="secondary"
-            icon={<ArrowLeft />}
-            handleClick={handleBack}
-          />
+      {!completed && (
+        <div className="w-full max-w-3xl flex justify-center">
+          <div className="px-5">
+            <Button
+              type="secondary"
+              icon={<ArrowLeft />}
+              handleClick={handleBack}
+            />
+          </div>
+          <div className="px-5">
+            <Button
+              type="tertiary"
+              icon={<ArrowRight />}
+              handleClick={handleNext}
+              size="md"
+              rounded="full"
+            />
+          </div>
         </div>
-        <div className="px-5">
-          <Button
-            type="tertiary"
-            icon={<ArrowRight />}
-            handleClick={handleNext}
-            size="md"
-            rounded="full"
-          />
-        </div>
-      </div>
+      )}
     </div>
   );
 };
 
 export default Module;
+

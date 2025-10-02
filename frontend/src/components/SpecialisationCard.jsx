@@ -7,6 +7,9 @@ import ElecIcon from "../assets/specialisation_icons/Electrical.svg";
 import EnviroIcon from "../assets/specialisation_icons/Environmental.svg";
 import MatIcon from "../assets/specialisation_icons/Materials.svg";
 import SoftwareIcon from "../assets/specialisation_icons/Software.svg";
+import AeroIcon from "../assets/specialisation_icons/Aerospace.svg";
+import MechIcon from "../assets/specialisation_icons/Mechanical.svg";
+import TrcIcon from "../assets/specialisation_icons/Mechatronics.svg";
 
 const specialisations = [
   { iconSrc: BiomedIcon, name: "Biomedical Engineering", description: "Applies engineering principles to medicine and biology." },
@@ -16,19 +19,27 @@ const specialisations = [
   { iconSrc: EnviroIcon, name: "Environmental Engineering", description: "Solves environmental problems using engineering." },
   { iconSrc: MatIcon, name: "Materials Engineering", description: "Develops and tests new materials." },
   { iconSrc: SoftwareIcon, name: "Software Engineering", description: "Designs and builds software systems." },
+  { iconSrc: AeroIcon, name: "Aerospace Engineering", description: "Design and develop flight vehicles." },
+  { iconSrc: MechIcon, name: "Mechanical Engineering", description: "Utilise motion and energy to create, manufacture and assemble designs." },
+  { iconSrc: TrcIcon, name: "Mechatronics Engineering", description: "Employ computer control systems to make devices smarter and more efficient." }
 ];
 
-const Specialisations = () => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
-    {specialisations.map((spec) => (
+const SpecialisationCard = ({ name, prob }) => {
+  const fullName = `${name} Engineering`;
+  const spec = specialisations.find(s => s.name === fullName);
+
+  if (!spec) return null;
+
+  return (
+    <div className="flex justify-center">
       <Block
-        key={spec.name}
         iconSrc={spec.iconSrc}
         name={spec.name}
         description={spec.description}
+        prob={prob}
       />
-    ))}
-  </div>
-);
+    </div>
+  );
+};
 
-export default Specialisations;
+export default SpecialisationCard;
