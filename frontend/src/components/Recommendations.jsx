@@ -8,7 +8,7 @@ const Recommendations = ({ specialisations }) => {
   return (
     <div className="p-4 w-full max-w-5xl mx-auto">
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
         {top3.map(([spec, prob], idx) => (
           <SpecialisationCard key={idx} name={spec} prob={prob} />
         ))}

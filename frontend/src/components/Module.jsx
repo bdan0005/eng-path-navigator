@@ -113,17 +113,26 @@ const Module = () => {
             <p>Loading your results...</p>
           )}
 
-          <Button
-            type="primary-shadow"
-            text="Restart Quiz"
-            handleClick={() => {
-              setAnswers({});
-              setRanking(null);
-              setCompleted(false);
-              setStarted(false);
-              setCurrentQuestionIndex(0);
-            }}
-          />
+          <div className="w-full max-w-full flex justify-center gap-4">
+            <Button
+              type="tertiary-bordered"
+              text="Learn more"
+              handleClick={() => {
+                // TODO: add routing to About page
+              }}
+            />
+            <Button
+              type="tertiary"
+              text="Restart quiz"
+              handleClick={() => {
+                setAnswers({});
+                setRanking(null);
+                setCompleted(false);
+                setStarted(false);
+                setCurrentQuestionIndex(0);
+              }}
+            />
+          </div>
         </div>
       );
     }
@@ -167,7 +176,7 @@ const Module = () => {
 
   if (!started) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
         <div className="space-y-6">
           <div className="space-y-3">
             <div className="text-center text-black text-5xl font-bold whitespace-pre-line leading-normal">
@@ -195,13 +204,13 @@ const Module = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-between h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
+    <div className="flex flex-col items-center justify-between min-h-screen bg-gradient-to-br from-light-blue to-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
       <ProgressHeader
         totalSections={questions.length}
         currentSection={currentQuestionIndex}
       />
 
-      <div className="flex-1 w-full max-w-3xl overflow-y-auto mt-6 mb-6 pt-10">
+      <div className="flex-1 w-full max-w-4xl overflow-y-auto mt-6 mb-6 pt-10">
         {renderQuestion()}
       </div>
 
