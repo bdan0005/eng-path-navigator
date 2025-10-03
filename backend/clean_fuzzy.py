@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, top_k_accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
+from itertools import product
 
 # Load data
 df = pd.read_csv("survey_results_clean.csv")
@@ -72,11 +73,16 @@ plt.show()
 
 # Content interest/skills vs Specialisation
 plt.figure(figsize=(12, 6))
+# Scale skills so that 1 (highest rank) becomes 1.0 and 12 (lowest rank) becomes 0.0
+skills_scaled = df[skills].apply(lambda x: (12 - x) / 11)
+
 sns.heatmap(
-    df.groupby(target)[skills].mean(),
+    df.assign(**{s: skills_scaled[s] for s in skills}).groupby(target)[skills].mean(),
     annot=True, cmap="YlGnBu", cbar=True
 )
-plt.title("Average Skills by Specialisation")
+plt.title("Average Content Interest Rank according to Specialisation")
+plt.xlabel("First year content skills")
+plt.ylabel("Engineering specialisation")
 plt.tight_layout()
 plt.show()
 
@@ -95,9 +101,34 @@ plt.xticks(
     rotation=45,
     ha="right"
 )
-plt.title("Average Hobbies by Specialisation")
+plt.title("Common Hobbies Grouped by Specialisation")
+plt.xlabel("Hobby")
+plt.ylabel("Engineering specialisation")
 plt.tight_layout()
 plt.show()
+
+# --- Common combinations of skills and hobbies per specialisation ---
+
+# For each specialisation, find top N most common skill-hobby pairs
+N = 10  # Number of top combinations to show
+
+for spec in df[target].unique():
+    spec_df = df[df[target] == spec]
+    # Find binary hobbies (present/absent) and skills (top 4 ranked)
+    top_skills = spec_df[skills].apply(lambda row: [skills[i] for i in np.argsort(row)[:4]], axis=1)
+    present_hobbies = spec_df[hobbies].apply(lambda row: [h for h in hobbies if row[h] == 1.0], axis=1)
+    
+    # Build combinations
+    combos = []
+    for skill_list, hobby_list in zip(top_skills, present_hobbies):
+        combos.extend(list(product(skill_list, hobby_list)))
+    
+    # Count most common combinations
+    combo_counts = pd.Series(combos).value_counts().head(N)
+    
+    print(f"\nTop {N} skill-hobby combinations for {spec}:")
+    for (skill, hobby), count in combo_counts.items():
+        print(f"{skill} + {hobby.replace('hobby_', '').replace('_', ' ')}: {count}")
 
 # --- Fuzzy-style predictor ---
 X = df[personality_traits + skills + hobbies].fillna(0)
