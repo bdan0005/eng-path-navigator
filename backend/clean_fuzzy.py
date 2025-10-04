@@ -235,13 +235,51 @@ for idx, class_label in enumerate(clf.classes_):
 # Create a DataFrame of coefficients
 coef_df = pd.DataFrame(clf.coef_, index=clf.classes_, columns=feature_names)
 # Remove hobby_ prefix from hobby list
-pretty_feature_names = [f.replace("hobby_", "") for f in feature_names]
+pretty_feature_names = [f.replace("hobby_", "").replace("_", " ") for f in feature_names]
 coef_df.columns = pretty_feature_names
 
 plt.figure(figsize=(18, 6))
 sns.heatmap(coef_df, annot=True, cmap="coolwarm", center=0, cbar=True)
 plt.title("Logistic Regression Coefficient Heatmap (Features vs Specialisations)")
 plt.xlabel("Feature")
+plt.ylabel("Specialisation")
+plt.tight_layout()
+plt.show()
+
+# Prepare feature groups
+personality_features = [f for f in feature_names if f in personality_traits]
+skills_features = [f for f in feature_names if f in skills]
+hobby_features = [f for f in feature_names if f not in personality_traits + skills and f != "hobby_Other"]
+
+# Remove 'hobby_' prefix for hobby features
+pretty_hobby_features = [f.replace("hobby_", "").replace("_", " ") for f in hobby_features]
+
+# Coefficient DataFrames for each group
+coef_personality = coef_df[personality_features]
+coef_skills = coef_df[skills_features]
+coef_hobbies = coef_df[pretty_hobby_features]
+
+# Plot heatmaps
+plt.figure(figsize=(8, 4))
+sns.heatmap(coef_personality, annot=True, cmap="coolwarm", center=0, cbar=True)
+plt.title("Personality Coefficient Heatmap")
+plt.xlabel("Personality Trait")
+plt.ylabel("Specialisation")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 4))
+sns.heatmap(coef_skills, annot=True, cmap="coolwarm", center=0, cbar=True)
+plt.title("Skills Coefficient Heatmap")
+plt.xlabel("Skill")
+plt.ylabel("Specialisation")
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(16, 8))
+sns.heatmap(coef_hobbies, annot=True, cmap="coolwarm", center=0, cbar=True)
+plt.title("Hobbies Coefficient Heatmap")
+plt.xlabel("Hobby")
 plt.ylabel("Specialisation")
 plt.tight_layout()
 plt.show()
