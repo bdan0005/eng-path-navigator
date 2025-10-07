@@ -234,15 +234,21 @@ for idx, class_label in enumerate(clf.classes_):
 
 # Create a DataFrame of coefficients
 coef_df = pd.DataFrame(clf.coef_, index=clf.classes_, columns=feature_names)
-# Remove hobby_ prefix from hobby list
-pretty_feature_names = [f.replace("hobby_", "").replace("_", " ") for f in feature_names]
-coef_df.columns = pretty_feature_names
+# Remove hobby other
+cleaned_columns = [col for col in coef_df.columns if col != "hobby_Other"]
+coef_df = coef_df[cleaned_columns]
 
 plt.figure(figsize=(18, 6))
 sns.heatmap(coef_df, annot=True, cmap="coolwarm", center=0, cbar=True)
 plt.title("Logistic Regression Coefficient Heatmap (Features vs Specialisations)")
 plt.xlabel("Feature")
 plt.ylabel("Specialisation")
+plt.xticks(
+    ticks=np.arange(len(coef_df.columns)) + 0.5,
+    labels=[col.replace("hobby_", "").replace("_", " ") for col in coef_df.columns],
+    rotation=45,
+    ha="right"
+)
 plt.tight_layout()
 plt.show()
 
@@ -251,13 +257,10 @@ personality_features = [f for f in feature_names if f in personality_traits]
 skills_features = [f for f in feature_names if f in skills]
 hobby_features = [f for f in feature_names if f not in personality_traits + skills and f != "hobby_Other"]
 
-# Remove 'hobby_' prefix for hobby features
-pretty_hobby_features = [f.replace("hobby_", "").replace("_", " ") for f in hobby_features]
-
 # Coefficient DataFrames for each group
 coef_personality = coef_df[personality_features]
 coef_skills = coef_df[skills_features]
-coef_hobbies = coef_df[pretty_hobby_features]
+coef_hobbies = coef_df[hobby_features]
 
 # Plot heatmaps
 plt.figure(figsize=(8, 4))
@@ -265,6 +268,11 @@ sns.heatmap(coef_personality, annot=True, cmap="coolwarm", center=0, cbar=True)
 plt.title("Personality Coefficient Heatmap")
 plt.xlabel("Personality Trait")
 plt.ylabel("Specialisation")
+plt.xticks(
+    ticks=np.arange(len(coef_personality.columns)) + 0.5,
+    rotation=45,
+    ha="right"
+)
 plt.tight_layout()
 plt.show()
 
@@ -273,6 +281,11 @@ sns.heatmap(coef_skills, annot=True, cmap="coolwarm", center=0, cbar=True)
 plt.title("Content Interest Coefficient Heatmap")
 plt.xlabel("Interest")
 plt.ylabel("Specialisation")
+plt.xticks(
+    ticks=np.arange(len(coef_skills.columns)) + 0.5,
+    rotation=45,
+    ha="right"
+)
 plt.tight_layout()
 plt.show()
 
@@ -281,5 +294,32 @@ sns.heatmap(coef_hobbies, annot=True, cmap="coolwarm", center=0, cbar=True)
 plt.title("Hobbies Coefficient Heatmap")
 plt.xlabel("Hobby")
 plt.ylabel("Specialisation")
+plt.xticks(
+    ticks=np.arange(len(coef_hobbies.columns)) + 0.5,
+    labels=[col.replace("hobby_", "").replace("_", " ") for col in coef_hobbies.columns],
+    rotation=45,
+    ha="right"
+)
+plt.tight_layout()
+plt.show()
+
+# Aggregate feature importance by summing the absolute values of coefficients across all classes
+feature_importance = coef_df.abs().sum(axis=0).sort_values(ascending=False)
+
+print("\nAggregate Feature Importance (sum of absolute coefficients across all classes):")
+print(feature_importance)
+
+# Visualize the aggregate importance
+plt.figure(figsize=(14, 5))
+sns.barplot(x=feature_importance.index, y=feature_importance.values, palette="plasma")
+plt.title("Aggregate Feature Importance (Sum of Absolute Coefficients)")
+plt.ylabel("Aggregate Importance")
+plt.xlabel("Feature")
+plt.xticks(
+    ticks=np.arange(len(feature_importance.index)),
+    labels=[col.replace("hobby_", "(Hobby)").replace("_", " ") for col in feature_importance.index],
+    rotation=45,
+    ha="right"
+)
 plt.tight_layout()
 plt.show()
