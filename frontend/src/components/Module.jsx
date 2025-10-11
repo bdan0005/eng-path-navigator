@@ -42,15 +42,43 @@ const Module = () => {
   const [answers, setAnswers] = useState({});
   const [completed, setCompleted] = useState(false);
   const [ranking, setRanking] = useState([]);
-  const [email, setEmail] = useState("");
-  const [rating, setRating] = useState(0);
+  const [studentData, setStudentData] = useState(null);
 
   const handleStart = () => setStarted(true);
 
-  const handleFormSubmit = (value) => {
-    setEmail(value.email);
-    setRating(value.rating);
-  }
+  const handleFormSubmit = async ({ email, rating }) => {
+    if (!studentData || !ranking) return;
+
+    try {
+      const FIREBASE_FUNCTION_URL = process.env.REACT_APP_FIREBASE_FUNCTION_URL;
+
+      const payload = {
+        ...studentData,
+        ranking,
+        email,
+        rating
+      };
+
+      console.log("Saving combined data:", payload);
+
+      const response = await fetch(FIREBASE_FUNCTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const text = await response.text();
+      try {
+        const data = JSON.parse(text);
+        console.log("Response from Firebase Function:", data);
+      } catch {
+        console.warn("Received non-JSON response:", text);
+      }
+    } catch (error) {
+      console.error("Error saving data:", error);
+      alert("Error submitting. Please try again later.");
+    }
+  };
 
   const handleAnswerChange = (value) => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -65,11 +93,11 @@ const Module = () => {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
       const studentData = buildStudentData(answers);
+      setStudentData(studentData)
       try {
         const data = await recommend(studentData);
         setRanking(data.ranking);
         setCompleted(true);
-        saveData(studentData, data.ranking);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -139,6 +167,7 @@ const Module = () => {
                 setCompleted(false);
                 setStarted(false);
                 setCurrentQuestionIndex(0);
+                setStudentData(null);
               }}
             />
           </div>
@@ -182,38 +211,6 @@ const Module = () => {
         );
       default:
         return <div>Unsupported question type</div>;
-    }
-  };
-
-  const saveData = async (studentData, ranking) => {
-    try {
-      const FIREBASE_FUNCTION_URL = process.env.REACT_APP_FIREBASE_FUNCTION_URL;
-
-      // Include the ranking in the object
-      const payload = {
-        ...studentData,
-        ranking
-      };
-
-      console.log("Sending data:", payload, "to", FIREBASE_FUNCTION_URL);
-
-      const response = await fetch(FIREBASE_FUNCTION_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("Response from Firebase Function:", data);
-
-    } catch (error) {
-      console.error("Error sending data to Firebase Function:", error);
     }
   };
 

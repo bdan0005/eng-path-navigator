@@ -6,7 +6,7 @@ from firebase_admin import initialize_app
 
 # --- Configuration ---
 # IMPORTANT: Replace this placeholder with the actual URL of your deployed Google Apps Script web app (the one that accepts POST requests).
-GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7-oOf6c8bWQquYPOzetmhXQzK4bu9kqWpPWk59autG7E30HAbTkVKpYwwVFlnEnee/exec"
+GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbypnc-Np8t3gwXWaShFKjlwMxvTNx4j1_Z6L4BrtqcoVUFqrUCMm_RulUrBoSZS_CTn/exec"
 # --- End Configuration ---
 
 
