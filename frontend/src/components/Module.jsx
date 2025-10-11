@@ -41,8 +41,15 @@ const Module = () => {
   const [answers, setAnswers] = useState({});
   const [completed, setCompleted] = useState(false);
   const [ranking, setRanking] = useState([]);
+  const [email, setEmail] = useState("");
+  const [rating, setRating] = useState(0);
 
   const handleStart = () => setStarted(true);
+
+  const handleFormSubmit = (value) => {
+    setEmail(value.email);
+    setRating(value.rating);
+  }
 
   const handleAnswerChange = (value) => {
     const currentQuestion = questions[currentQuestionIndex];
@@ -61,7 +68,7 @@ const Module = () => {
         const data = await recommend(studentData);
         setRanking(data.ranking);
         setCompleted(true);
-        saveData(studentData);
+        saveData(studentData, data.ranking);
       } catch (error) {
         console.error("Error:", error);
       }
@@ -175,18 +182,24 @@ const Module = () => {
     }
   };
 
-  const saveData = async (studentData) => {
+  const saveData = async (studentData, ranking) => {
     try {
       const FIREBASE_FUNCTION_URL = process.env.REACT_APP_FIREBASE_FUNCTION_URL;
 
-      console.log("Sending data:", studentData, "to", FIREBASE_FUNCTION_URL);
+      // Include the ranking in the object
+      const payload = {
+        ...studentData,
+        ranking
+      };
+
+      console.log("Sending data:", payload, "to", FIREBASE_FUNCTION_URL);
 
       const response = await fetch(FIREBASE_FUNCTION_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(studentData),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
