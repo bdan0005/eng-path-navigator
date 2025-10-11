@@ -29,13 +29,53 @@ const Button = ({
   const baseStyles = `inline-flex items-center justify-center font-sans ${roundedClass} transition ease-in-out duration-300`;
 
   const typeStyles = {
-    primary: "bg-blue text-white hover:shadow-md border-blue border-2",
-    "primary-shadow":
-      "bg-blue text-white shadow-md transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border-blue border-2",
-    secondary: "text-black hover:drop-shadow-md border-none",
-    tertiary: "bg-gray-800 text-white hover:shadow-md border-gray-800 border-2",
-    "tertiary-bordered": "text-gray-800 hover:drop-shadow-md border-gray-800 border-2",
-    black: "bg-black text-white hover:shadow-md border-black border-2",
+    primary: `
+      bg-sky-700 text-white border-2 border-sky-700
+      hover:bg-sky-800 hover:border-sky-800
+      active:bg-sky-900 active:border-sky-900
+      focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-1
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
+
+    "primary-shadow": `
+      bg-sky-700 text-white border-2 border-sky-700 shadow-md
+      hover:shadow-lg hover:bg-sky-800 hover:border-sky-800
+      active:bg-sky-900 active:border-sky-900
+      focus:outline-none focus:ring-2 focus:ring-sky-800
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
+
+    secondary: `
+      text-gray-800
+      hover:bg-gray-100
+      active:bg-gray-200
+      focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
+
+    tertiary: `
+      bg-gray-800 text-white border-2 border-gray-800
+      hover:bg-gray-900 hover:border-gray-900
+      active:bg-black active:border-black
+      focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
+
+    "tertiary-bordered": `
+      text-gray-800 border-2 border-gray-800
+      hover:bg-gray-100
+      active:bg-gray-200
+      focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
+
+    black: `
+      bg-black text-white border-2 border-black
+      hover:bg-gray-900
+      active:bg-gray-950
+      focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
   };
 
   const sizeStyles = {

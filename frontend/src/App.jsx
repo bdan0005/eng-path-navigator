@@ -5,7 +5,7 @@ import Module from './components/Module';
 function App() {
   return (
     <Router>
-      <div className="px-10 py-5">
+      <div className="px-10 py-5 bg-gray-50">
         <div className="pb-5">
           <TopBar />
         </div>

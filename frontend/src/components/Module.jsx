@@ -176,7 +176,7 @@ const Module = () => {
 
   if (!started) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-light-blue to-white text-white p-10 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.07)]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-white text-white p-10 rounded-2xl shadow-md">
         <div className="space-y-6">
           <div className="space-y-3">
             <div className="text-center text-black text-5xl font-bold whitespace-pre-line leading-normal">
@@ -204,7 +204,7 @@ const Module = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen bg-gradient-to-br from-light-blue to-white p-6 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_10px_-10px_rgba(0,0,0,0.07)]">
+    <div className="flex flex-col items-center justify-between min-h-screen bg-gradient-to-br from-sky-50 to-white p-6 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_10px_-10px_rgba(0,0,0,0.07)]">
       <ProgressHeader
         totalSections={questions.length}
         currentSection={currentQuestionIndex}
