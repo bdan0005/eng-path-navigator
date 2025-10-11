@@ -1,15 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "node_modules/flowbite/**/*.js",
+    "node_modules/flowbite-react/**/*.js"
   ],
   theme: {
     extend: {
       colors: {
              'blue': '#0064AC',
              'light-blue': '#bcd9eeac',
-             'gray': '#1F2429',
-             'light-gray': '#C5CBD1',
              'success-25': '#F6FEF9',
              'success-100': '#D1FADF',
              'success-300': '#6CE9A6',
@@ -20,7 +21,9 @@ module.exports = {
           inter: ['Inter', 'sans-serif'],
         },
     },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin'),
+  ],
   safelist: [
     'min-h-[70px]',
   ],

@@ -1,23 +1,13 @@
 import { useRef, useEffect, useState } from "react";
+import { Label } from "flowbite-react";
 
 export default function Slider({
   min = 0,
-  max = 10,
+  max = 100,
   step = 1,
-  markers = true,
   value,
   onChange,
 }) {
-  // Create all values for the slider (step can be 1, 2, etc.)
-  const allValues = [];
-  for (let i = min; i <= max; i += step) {
-    allValues.push(i);
-  }
-
-  // Only show ticks at multiples of 10
-  const tickValues = allValues.filter((val) => val % 10 === 0);
-
-  // Ref and state for slider width
   const sliderRef = useRef(null);
   const [sliderWidth, setSliderWidth] = useState(0);
   const horizontalPadding = 10;
@@ -26,14 +16,15 @@ export default function Slider({
     if (sliderRef.current) {
       setSliderWidth(sliderRef.current.offsetWidth);
     }
-    // Update on window resize
+
     const handleResize = () => {
       if (sliderRef.current) {
         setSliderWidth(sliderRef.current.offsetWidth);
       }
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const percent = (value - min) / (max - min);
@@ -41,51 +32,77 @@ export default function Slider({
   const leftPx = horizontalPadding + percent * thumbReach;
 
   return (
-    <div className="flex flex-col space-y-2 p-2 items-center w-full">
-      {/* Value indicator above slider */}
-      <div className="relative w-full mb-2 px-4" ref={sliderRef}>
+    <div className="flex flex-col items-center w-full space-y-3 p-3">
+      <div className="relative w-full" ref={sliderRef}>
         <span
-          className="absolute -top-4 text-black font-bold pointer-events-none"
+          className="absolute -top-3 text-sm font-semibold text-gray-900 dark:text-gray-200 pointer-events-none"
           style={{
             left: `${leftPx}px`,
-            transform: 'translateX(-50%)',
+            transform: "translateX(-50%)",
           }}
         >
           {value}
         </span>
       </div>
 
-      {/* Range slider */}
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full px-4"
-        list={markers ? "steplist" : undefined}
-      />
+      <div className="w-full px-4">
+        <Label htmlFor="slider" value="Select value" className="mb-2" />
+        <input
+          type="range"
+          id="slider"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="w-full appearance-none h-1 rounded-lg outline-none bg-transparent"
+        />
+      </div>
 
-      {/* Tick values */}
-      {markers && (
-        <ul className="flex justify-between w-full px-[10px]">
-          {tickValues.map((tick) => (
-            <li key={tick} className="flex justify-center relative">
-              <span className="absolute text-black text-md">{tick}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="flex justify-between w-full px-[18px]">
+        <li className="text-xs text-gray-700 dark:text-gray-300 font-semibold">{min}</li>
+        <li className="text-xs text-gray-700 dark:text-gray-300 font-semibold">{max}</li>
+      </ul>
 
-      {/* Tick marks */}
-      {markers && (
-        <datalist id="steplist">
-          {tickValues.map((tick) => (
-            <option key={tick} value={tick} />
-          ))}
-        </datalist>
-      )}
+      <style jsx>{`
+        input[type="range"]::-webkit-slider-runnable-track {
+          background: #1f2937;
+          height: 4px;
+          border-radius: 2px;
+        }
+
+        input[type="range"]::-moz-range-track {
+          background: #1f2937;
+          height: 4px;
+          border-radius: 2px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 20px;
+          height: 20px;
+          background: #1f2937;
+          border: 2px solid #1f2937;
+          border-radius: 50%;
+          cursor: pointer;
+          margin-top: -8px;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+          width: 20px;
+          height: 20px;
+          background: #1f2937;
+          border: 2px solid #1f2937;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        input[type="range"]::-ms-thumb {
+          background: #1f2937;
+          border: 2px solid #1f2937;
+        }
+      `}</style>
     </div>
   );
 }

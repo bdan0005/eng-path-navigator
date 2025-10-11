@@ -17,7 +17,7 @@ const Block = ({ iconSrc, name, description, prob }) => (
       {/* Description */}
       <p className="text-gray-500 text-center text-sm">{description}</p>
       {/* Probability */}
-      <p className="text-gray text-center text-xs font-medium mt-3">{prob}% fit</p>
+      <p className="text-gray-800 text-center text-xs font-medium mt-3">{prob}% fit</p>
     </div>
   </div>
 );

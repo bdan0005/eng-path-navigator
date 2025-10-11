@@ -33,8 +33,8 @@ const Button = ({
     "primary-shadow":
       "bg-blue text-white shadow-md transition-shadow hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] border-blue border-2",
     secondary: "text-black hover:drop-shadow-md border-none",
-    tertiary: "bg-gray text-white hover:shadow-md border-gray border-2",
-    "tertiary-bordered": "text-gray hover:drop-shadow-md border-gray border-2",
+    tertiary: "bg-gray-800 text-white hover:shadow-md border-gray-800 border-2",
+    "tertiary-bordered": "text-gray-800 hover:drop-shadow-md border-gray-800 border-2",
     black: "bg-black text-white hover:shadow-md border-black border-2",
   };
 

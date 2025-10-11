@@ -30,7 +30,7 @@ const RankQuestion = ({ text, options, maxRank = options.length, onChange }) => 
   return (
     <div className="p-4 w-full max-w-3xl mx-auto space-y-6">
       <div className="text-3xl font-bold text-black mb-6 text-center">{text}</div>
-      <div className="text-sm text-gray-500 text-center">
+      <div className="text-sm text-gray-700 text-center">
         You can rank up to {maxRank} option{maxRank > 1 ? "s" : ""}.
       </div>
 
@@ -45,7 +45,7 @@ const RankQuestion = ({ text, options, maxRank = options.length, onChange }) => 
             <select
               value={ranks[option] || ""}
               onChange={(e) => handleRankChange(option, Number(e.target.value))}
-              className="border rounded px-2 py-1"
+              className="border border-gray-800 rounded px-2 py-1"
             >
               <option value="">-</option>
               {rankOptions.map((rank) => (

@@ -24,7 +24,7 @@ const CheckboxQuestion = ({ text, options, maxSelectable = options.length, onCha
     <div className="p-4 w-full max-w-3xl mx-auto space-y-4">
       <div className="text-3xl font-bold text-black mb-6 text-center">{text}</div>
       {maxSelectable < options.length && (
-        <div className="text-sm text-gray-500 text-center">
+        <div className="text-sm text-gray-700 text-center">
           You can select up to {maxSelectable} option{maxSelectable > 1 ? "s" : ""}.
         </div>
       )}
@@ -33,8 +33,8 @@ const CheckboxQuestion = ({ text, options, maxSelectable = options.length, onCha
         {options.map((option) => (
           <label
             key={option}
-            className={`flex items-center space-x-2 p-2 border rounded cursor-pointer transition ${
-              selected.includes(option) ? "bg-blue-100 border-blue-400" : "bg-white"
+            className={`flex items-center space-x-2 p-2 border border-gray-800 rounded cursor-pointer transition ${
+              selected.includes(option) ? "bg-gray-800 text-white border-gray-800" : "bg-white"
             }`}
           >
             {/* Hidden Checkbox input */}
