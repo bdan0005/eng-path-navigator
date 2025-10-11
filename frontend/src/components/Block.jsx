@@ -2,7 +2,7 @@ import React from "react";
 
 const Block = ({ iconSrc, name, description, prob }) => (
   <div className="w-60 min-h-72 rounded-2xl ">
-    <div className="bg-white rounded-2xl shadow-sm flex flex-col items-center p-6 w-full h-full hover:shadow-md transition-shadow box-border">
+    <div className="bg-white border border-sky-700/25 rounded-2xl shadow-sm flex flex-col items-center p-6 w-full h-full hover:shadow-md transition-shadow box-border">
       {/* Icon */}
       <div className="rounded-full p-1 flex items-center justify-center mb-4">
         <img
