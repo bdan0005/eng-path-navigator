@@ -12,7 +12,7 @@ export default function ProgressHeader({
     completed: "#1F2429",
     current: "#97abbaff",
     pending: "#1f242933",
-    done: "#40C95E",
+    done: "#1F2429",
   };
 
   // pick color for a given segment
