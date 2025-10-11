@@ -208,6 +208,7 @@ const Module = () => {
       <ProgressHeader
         totalSections={questions.length}
         currentSection={currentQuestionIndex}
+        isComplete={completed}
       />
 
       <div className="flex-1 w-full max-w-4xl overflow-y-auto mt-1 mb-6 pt-5">

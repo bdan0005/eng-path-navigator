@@ -2,12 +2,11 @@ import React from "react";
 import { ReactComponent as Tick } from "../assets/tick.svg";
 
 export default function ProgressHeader({
-  totalSections = 5,   // how many segments in the bar
-  currentSection = 1,  // which segment is active
+  totalSections = 5, // how many segments in the bar
+  currentSection = 1, // which segment is active
   pageWidthPercent = 70, // how wide the bar should be, in % of viewport width
+  isComplete = false, // whether the quiz is completed or not
 }) {
-  const isComplete = currentSection > totalSections;
-
   // colors for each state
   const palette = {
     completed: "#1F2429",
@@ -80,7 +79,7 @@ export default function ProgressHeader({
           justifyContent: "center",
         }}
       >
-        <Tick width={20} height={20} />
+        <Tick width={20} height={20} fill={getColor(totalSections)} />
       </div>
     </div>
   );
