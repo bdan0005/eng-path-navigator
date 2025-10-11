@@ -79,6 +79,14 @@ const Button = ({
       focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1
       disabled:opacity-50 disabled:cursor-not-allowed
     `,
+
+    quaternary: `
+      text-gray-800 bg-gray-50
+      hover:bg-gray-100
+      active:bg-gray-200
+      focus:outline-none focus:ring-2 focus:ring-gray-200/50
+      disabled:opacity-50 disabled:cursor-not-allowed
+    `,
   };
 
   const sizeStyles = {
@@ -119,7 +127,7 @@ const Button = ({
     .join(" ");
 
   return (
-    <div className="flex justify-center sm:justify-start h-full">
+    <div className="flex justify-center sm:justify-start">
       <button type="button" onClick={handleClick} disabled={disabled} className={classNames}>
         {!hasText && isIconOnly ? (
           // Icon-only button

@@ -1,18 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import TopBar from './components/TopBar';
-import Module from './components/Module';
+import HomePage from './pages/HomePage';
+import SpecialisationsPage from './pages/SpecialisationsPage';
 
 function App() {
   return (
     <Router>
-      <div className="px-10 py-5 bg-gray-50">
-        <div className="pb-5">
-          <TopBar />
-        </div>
-        <Routes>
-          <Route path="/" element={<Module />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/specialisations" element={<SpecialisationsPage />} />
+      </Routes>
     </Router>
   );
 }
