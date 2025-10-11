@@ -195,7 +195,6 @@ const Module = () => {
               textSize="text-lg"
               handleClick={handleStart}
               size="lg"
-              rounded="2xl"
             />
           </div>
         </div>
@@ -222,6 +221,7 @@ const Module = () => {
               type="secondary"
               icon={<ArrowLeft />}
               handleClick={handleBack}
+              rounded="full"
             />
           </div>
           <div className="px-5">

@@ -15,6 +15,7 @@ const TopBar = () => {
         <Button 
           type="secondary" 
           text="Specialisations"
+          rounded="md"
         />
       </Link>
       <Button 
@@ -22,7 +23,7 @@ const TopBar = () => {
         text="Contact us"
         textSize="text-md"
         size="sm"
-        rounded="2xl"
+        rounded="lg"
         minHeight={40}
       />
     </div>

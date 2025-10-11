@@ -10,7 +10,7 @@ const Button = ({
   boldText = "semi",
   textSize = "text-md",
   size = "md", 
-  rounded = "full",
+  rounded = "lg",
   minHeight,
   children,
 }) => {
@@ -20,8 +20,11 @@ const Button = ({
   const roundedMap = {
     full: "rounded-full",
     "2xl": "rounded-2xl",
+    "xl": "rounded-xl",
     lg: "rounded-lg",
     md: "rounded-md",
+    sm: "rounded-sm",
+    xs: "rounded-xs",
     none: "rounded-none",
   };
   const roundedClass = roundedMap[rounded] || roundedMap.full;
@@ -30,18 +33,18 @@ const Button = ({
 
   const typeStyles = {
     primary: `
-      bg-sky-700 text-white border-2 border-sky-700
-      hover:bg-sky-800 hover:border-sky-800
-      active:bg-sky-900 active:border-sky-900
-      focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-1
+      bg-sky-700 text-white
+      hover:bg-sky-800 
+      active:bg-sky-900 
+      focus:outline-none focus:ring-2 focus:ring-sky-700/50
       disabled:opacity-50 disabled:cursor-not-allowed
     `,
 
     "primary-shadow": `
-      bg-sky-700 text-white border-2 border-sky-700 shadow-md
-      hover:shadow-lg hover:bg-sky-800 hover:border-sky-800
-      active:bg-sky-900 active:border-sky-900
-      focus:outline-none focus:ring-2 focus:ring-sky-800
+      bg-sky-700 text-white shadow-md
+      hover:shadow-lg 
+      active:bg-sky-900 
+      focus:outline-none focus:ring-2 focus:ring-sky-700/50
       disabled:opacity-50 disabled:cursor-not-allowed
     `,
 
@@ -49,15 +52,15 @@ const Button = ({
       text-gray-800
       hover:bg-gray-100
       active:bg-gray-200
-      focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1
+      focus:outline-none focus:ring-2 focus:ring-gray-200/50
       disabled:opacity-50 disabled:cursor-not-allowed
     `,
 
     tertiary: `
-      bg-gray-800 text-white border-2 border-gray-800
-      hover:bg-gray-900 hover:border-gray-900
-      active:bg-black active:border-black
-      focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1
+      bg-gray-800 text-white
+      hover:bg-gray-900
+      active:bg-black
+      focus:outline-none focus:ring-2 focus:ring-gray-500
       disabled:opacity-50 disabled:cursor-not-allowed
     `,
 
@@ -65,7 +68,7 @@ const Button = ({
       text-gray-800 border-2 border-gray-800
       hover:bg-gray-100
       active:bg-gray-200
-      focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1
+      focus:outline-none focus:ring-2 focus:ring-gray-400
       disabled:opacity-50 disabled:cursor-not-allowed
     `,
 
