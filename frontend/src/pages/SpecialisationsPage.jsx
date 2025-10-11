@@ -3,31 +3,86 @@ import TopBar from '../components/TopBar';
 import Button from '../components/Button';
 
 const specialisations = {
+  biomedical: {
+    name: "Biomedical Engineering",
+    description: "Applies engineering principles to medicine and biology to improve healthcare technology and devices.",
+    links: [
+      { label: "Monash University - Bachelor of Biomedical Engineering", url: "https://www.monash.edu/engineering/future-students/undergraduate-study/specialisations/biomedical" },
+      { label: "Monash University Handbook - Biomedical Engineering", url: "https://handbook.monash.edu/current/aos/BME" }
+    ]
+  },
+  chemical: {
+    name: "Chemical Engineering",
+    description: "Focuses on chemical processes, production, and the development of materials and chemicals.",
+    links: [
+      { label: "Monash University - Bachelor of Chemical Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/chemical-engineering-xs0002" },
+      { label: "Monash University Handbook - Chemical Engineering", url: "https://handbook.monash.edu/current/aos/CHEMENG" }
+    ]
+  },
   civil: {
-    name: 'Civil Engineering',
-    description: 'Civil engineering involves designing, constructing, and maintaining infrastructure such as roads, bridges, and buildings.',
+    name: "Civil Engineering",
+    description: "Designs and builds infrastructure projects such as roads, bridges, and buildings.",
     links: [
-      { label: 'Monash University - Bachelor of Civil Engineering', url: 'https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/civil-engineering-xs0003' },
-      { label: 'Monash University Handbook - Civil engineering', url: 'https://handbook.monash.edu/current/aos/CIVILENG03' },
-      { label: 'Institution of Civil Engineers - What is civil engineering?', url: 'https://www.ice.org.uk/what-is-civil-engineering' }
+      { label: "Monash University - Bachelor of Civil Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/civil-engineering-xs0003" },
+      { label: "Monash University Handbook - Civil Engineering", url: "https://handbook.monash.edu/current/aos/CIVILENG03" }
     ]
   },
   electrical: {
-    name: 'Electrical Engineering',
-    description: 'Electrical engineering focuses on electrical systems, electronics, and power generation.',
+    name: "Electrical Engineering",
+    description: "Works with electrical systems, electronics, and power generation.",
     links: [
-      { label: 'Monash University - Bachelor of Electrical Engineering', url: 'https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/electrical-and-computer-systems-engineering-xs0004' },
-      { label: 'Monash University Handbook - Electrical engineering', url: 'https://handbook.monash.edu/2024/aos/ecsyseng04' }
+      { label: "Monash University - Bachelor of Electrical Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/electrical-and-computer-systems-engineering-xs0004" },
+      { label: "Monash University Handbook - Electrical Engineering", url: "https://handbook.monash.edu/current/aos/ECSYSENG04" }
     ]
   },
-  electrical: {
-    name: 'Electrical Engineering',
-    description: 'Electrical engineering focuses on electrical systems, electronics, and power generation.',
+  environmental: {
+    name: "Environmental Engineering",
+    description: "Solves environmental problems using engineering principles, focusing on sustainability and resource management.",
     links: [
-      { label: 'Monash University - Bachelor of Electrical Engineering', url: 'https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/electrical-and-computer-systems-engineering-xs0004' },
-      { label: 'Monash University Handbook - Electrical engineering', url: 'https://handbook.monash.edu/2024/aos/ecsyseng04' }
+      { label: "Monash University - Bachelor of Environmental Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/environmental-engineering-xs0005" },
+      { label: "Monash University Handbook - Environmental Engineering", url: "https://handbook.monash.edu/current/aos/ENVENG05" }
     ]
   },
+  materials: {
+    name: "Materials Engineering",
+    description: "Develops and tests new materials for industrial, biomedical, and technological applications.",
+    links: [
+      { label: "Monash University - Bachelor of Materials Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/materials-engineering-xs0006" },
+      { label: "Monash University Handbook - Materials Engineering", url: "https://handbook.monash.edu/current/aos/MATENG06" }
+    ]
+  },
+  software: {
+    name: "Software Engineering",
+    description: "Designs and develops software systems, applications, and computational solutions.",
+    links: [
+      { label: "Monash University - Bachelor of Software Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/software-engineering-xs0007" },
+      { label: "Monash University Handbook - Software Engineering", url: "https://handbook.monash.edu/current/aos/SOFTENG07" }
+    ]
+  },
+  aerospace: {
+    name: "Aerospace Engineering",
+    description: "Designs and develops flight vehicles, spacecraft, and related systems.",
+    links: [
+      { label: "Monash University - Bachelor of Aerospace Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/aerospace-engineering-xs0008" },
+      { label: "Monash University Handbook - Aerospace Engineering", url: "https://handbook.monash.edu/current/aos/AEROENG08" }
+    ]
+  },
+  mechanical: {
+    name: "Mechanical Engineering",
+    description: "Utilises motion, energy, and mechanics to design, manufacture, and assemble machines and devices.",
+    links: [
+      { label: "Monash University - Bachelor of Mechanical Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/mechanical-engineering-xs0009" },
+      { label: "Monash University Handbook - Mechanical Engineering", url: "https://handbook.monash.edu/current/aos/MECENG09" }
+    ]
+  },
+  mechatronics: {
+    name: "Mechatronics Engineering",
+    description: "Combines mechanical, electrical, and computer engineering to create intelligent and automated systems.",
+    links: [
+      { label: "Monash University - Bachelor of Mechatronics Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/mechatronics-engineering-xs0010" },
+      { label: "Monash University Handbook - Mechatronics Engineering", url: "https://handbook.monash.edu/current/aos/MECATRON10" }
+    ]
+  }
 };
 
 export default function SpecialisationsPage() {
@@ -41,7 +96,7 @@ export default function SpecialisationsPage() {
       </div>
 
       <div className="flex bg-white rounded-2xl shadow-sm min-h-[500px]">
-        <div className="w-64 align-start justify-start rounded-l-2xl p-6 flex flex-col space-y-4">
+        <div className="w-72 align-start justify-start rounded-l-2xl p-6 flex flex-col space-y-4">
           {Object.keys(specialisations).map((key) => (
             <Button
               key={key}
