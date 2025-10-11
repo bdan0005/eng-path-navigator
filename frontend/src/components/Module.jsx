@@ -41,7 +41,6 @@ const Module = () => {
   const [answers, setAnswers] = useState({});
   const [completed, setCompleted] = useState(false);
   const [ranking, setRanking] = useState([]);
-  const SPREADSHEET_URL = process.env.REACT_APP_SPREADSHEET_URL;
 
   const handleStart = () => setStarted(true);
 
@@ -176,16 +175,30 @@ const Module = () => {
     }
   };
 
-  const saveData = (studentData) => {
-    console.log("Sending data:", studentData, "to", SPREADSHEET_URL);
-    fetch(SPREADSHEET_URL, {
-      method: "POST",
-      body: JSON.stringify(studentData),
-      headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.json())
-    .then(data => console.log("Response:", data))
-    .catch(err => console.error("Fetch error:", err));
+  const saveData = async (studentData) => {
+    try {
+      const FIREBASE_FUNCTION_URL = process.env.REACT_APP_FIREBASE_FUNCTION_URL;
+
+      console.log("Sending data:", studentData, "to", FIREBASE_FUNCTION_URL);
+
+      const response = await fetch(FIREBASE_FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(studentData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Response from Firebase Function:", data);
+
+    } catch (error) {
+      console.error("Error sending data to Firebase Function:", error);
+    }
   };
 
   if (!started) {
