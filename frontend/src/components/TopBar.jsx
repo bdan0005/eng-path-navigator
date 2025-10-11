@@ -9,7 +9,7 @@ const TopBar = () => {
       <Link to="/">
         <Button 
           type="secondary" 
-          text="Take the survey"
+          text="Take the quiz"
         />
       </Link>
       <Link to="/specialisations">

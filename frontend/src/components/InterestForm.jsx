@@ -43,7 +43,7 @@ export default function InterestForm({ onChange }) {
   return (
     <div className="flex flex-col bg-white border border-gray-400/25 rounded-lg p-6 max-w-xl mx-auto space-y-4">
       <p className="text-gray-800 font-medium">
-        If you are interested in contributing to this research, please fill this out!
+        If you are open to being contacted about your specialisation choice in the future, please fill this out!
       </p>
 
       <input
