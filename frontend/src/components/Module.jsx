@@ -5,6 +5,7 @@ import SliderQuestion from './SliderQuestion';
 import CheckboxQuestion from './CheckboxQuestion';
 import Recommendations from './Recommendations';
 import RankQuestion from './RankQuestion';
+import InterestForm from './InterestForm';
 import { recommend } from "../services/recommendApi";
 import { ReactComponent as ArrowLeft } from "../assets/arrow-left-blk.svg";
 import { ReactComponent as ArrowRight } from "../assets/arrow-right-wht.svg";
@@ -141,6 +142,8 @@ const Module = () => {
               }}
             />
           </div>
+          
+          <InterestForm onChange={handleFormSubmit} />
         </div>
       );
     }
