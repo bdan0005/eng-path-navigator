@@ -25,11 +25,11 @@ const SliderQuestion = ({ text, options, min = 0, max = 100, step = 1, onChange 
         {text}
       </div>
 
-      <div className="max-w-3xl mx-auto space-y-4">
+      <div className="max-w-3xl mx-auto">
         {options.map((option) => (
           <div 
             key={option} 
-            className="flex flex-col p-2 md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4"
+            className="flex flex-col p-2 md:flex-row items-center space-y-1 md:space-y-0 md:space-x-4"
           >
             <span className="flex-shrink-0 w-24 sm:w-40 font-semibold text-center md:text-left">
               {option}
