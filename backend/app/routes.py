@@ -28,6 +28,7 @@ features = personality_features + interests_features + hobbies_features
 
 @router.post("/recommend")
 def recommend(student: Student):
+    # --- Personality ---
     personality_values = [
         student.extraversion / 100,
         student.emotionality / 100,
@@ -36,13 +37,14 @@ def recommend(student: Student):
         student.openness / 100
     ]
 
+    # --- Interests ---
     interests_dict = {s: 0 for s in interests_features}
     for i, interest in enumerate(student.interests):
         if interest in interests_features:
             interests_dict[interest] = (len(student.interests) - i) / len(student.interests)
-
     interests_values = [interests_dict[s] for s in interests_features]
 
+    # --- Hobbies ---
     hobbies_dict = {h: 0 for h in hobbies_features}
     for hobby in student.hobbies:
         col_name = f"hobby_{hobby.replace(' ', '_')}"
@@ -50,15 +52,26 @@ def recommend(student: Student):
             hobbies_dict[col_name] = 1
     hobbies_values = [hobbies_dict[h] for h in hobbies_features]
 
+    # --- Combine features ---
     X = personality_values + interests_values + hobbies_values
     df = pd.DataFrame([X], columns=features)
 
+    # --- Scale & Predict ---
     X_scaled = scaler.transform(df)
     proba = clf.predict_proba(X_scaled)[0]
+    raw_scores = clf.decision_function(X_scaled)[0]
 
+    # --- Combine results ---
     ranking = sorted(
-        zip(clf.classes_, (proba * 100).round(2)),
-        key=lambda x: x[1],
+        [
+            {
+                "specialisation": cls,
+                "raw_score": round(float(raw), 4),
+                "probability": round(float(p) * 100, 2)
+            }
+            for cls, raw, p in zip(clf.classes_, raw_scores, proba)
+        ],
+        key=lambda x: x["probability"],
         reverse=True
     )
 
