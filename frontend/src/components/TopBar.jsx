@@ -12,21 +12,20 @@ const TopBar = () => {
           text="Take the quiz"
         />
       </Link>
-      <Link to="/specialisations">
+      <Link to="/interpret-results">
         <Button 
           type="secondary" 
+          text="Interpreting your results"
+          rounded="md"
+        />
+      </Link>
+      <Link to="/specialisations">
+        <Button 
+          type="primary" 
           text="Specialisations"
           rounded="md"
         />
       </Link>
-      <Button 
-        type="primary" 
-        text="Contact us"
-        textSize="text-md"
-        size="sm"
-        rounded="lg"
-        minHeight={40}
-      />
     </div>
   );
 };
