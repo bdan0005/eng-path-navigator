@@ -81,7 +81,7 @@ sns.heatmap(
     annot=True, cmap="YlGnBu", cbar=True
 )
 plt.title("Average Content Interest Rank according to Specialisation")
-plt.xlabel("First year content skills")
+plt.xlabel("First year content interests")
 plt.ylabel("Engineering specialisation")
 plt.tight_layout()
 plt.show()
@@ -93,7 +93,7 @@ hobbies_for_heatmap = [h for h in hobbies if h != "hobby_Other"]
 
 sns.heatmap(
     df.groupby(target)[hobbies_for_heatmap].mean(),
-    annot=True, cmap="BuPu", cbar=True
+    annot=True, cmap="YlGnBu", cbar=True
 )
 plt.xticks(
     ticks=np.arange(len(hobbies_for_heatmap)) + 0.5,
