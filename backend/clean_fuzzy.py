@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score, top_k_accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 from itertools import product
+import joblib
 
 # Load data
 df = pd.read_csv("survey_results_clean.csv")
@@ -151,12 +152,25 @@ clf.fit(X_train, y_train)
 y_pred = clf.predict(X_test)
 y_pred_proba = clf.predict_proba(X_test)
 
-# Evaluation
+# --- Raw decision scores (log-odds) ---
+y_pred_raw = clf.decision_function(X_test)
+
+# Convert to DataFrame for easier comparison
+raw_scores_df = pd.DataFrame(y_pred_raw, columns=clf.classes_)
+proba_df = pd.DataFrame(y_pred_proba, columns=clf.classes_)
+
+# Combine the two for inspection (first few rows)
+comparison_df = pd.concat(
+    [raw_scores_df.add_suffix(" (raw)"), proba_df.add_suffix(" (prob)")],
+    axis=1
+)
+
+# Evaluation metrics
 acc_top1 = accuracy_score(y_test, y_pred)
 acc_top3 = top_k_accuracy_score(y_test, y_pred_proba, k=3, labels=clf.classes_)
 acc_top5 = top_k_accuracy_score(y_test, y_pred_proba, k=5, labels=clf.classes_)
 
-print(f"Prediction Accuracy @1: {acc_top1:.2f}")
+print(f"\nPrediction Accuracy @1: {acc_top1:.2f}")
 print(f"Prediction Accuracy @3: {acc_top3:.2f}")
 print(f"Prediction Accuracy @5: {acc_top5:.2f}")
 
@@ -323,3 +337,7 @@ plt.xticks(
 )
 plt.tight_layout()
 plt.show()
+
+# Save the model
+joblib.dump(clf, "pred_model.pkl")
+joblib.dump(scaler, "scaler.pkl")
