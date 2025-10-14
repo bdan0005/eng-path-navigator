@@ -79,8 +79,6 @@ def recommend(student: Student):
 
     return {"ranking": ranking}
 
-GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMlY8iHgf-M3AG6Ed0vXOFU2DfteTiHFYYUrhOicy-7VLqWh_twm7Bgm7dxbIcxQUQ/exec"
-
 @router.api_route("/send-to-sheet", methods=["POST", "OPTIONS"])
 async def send_to_sheet(req: Request):
     """
