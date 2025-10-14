@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, Response
+import requests
+import json
 import joblib
 import os
 import pandas as pd
@@ -76,3 +78,55 @@ def recommend(student: Student):
     )
 
     return {"ranking": ranking}
+
+GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMlY8iHgf-M3AG6Ed0vXOFU2DfteTiHFYYUrhOicy-7VLqWh_twm7Bgm7dxbIcxQUQ/exec"
+
+@router.api_route("/send-to-sheet", methods=["POST", "OPTIONS"])
+async def send_to_sheet(req: Request):
+    """
+    Handles POST and OPTIONS requests, applies CORS manually,
+    and forwards valid POST data to the Google Apps Script endpoint.
+    """
+    cors_headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Max-Age": "3600"
+    }
+
+    # --- Handle preflight (OPTIONS) ---
+    if req.method == "OPTIONS":
+        return Response(status_code=204, headers=cors_headers)
+
+    # --- Handle POST ---
+    try:
+        data = await req.json()
+        if not data:
+            raise ValueError("Request body must be valid JSON.")
+
+        print(f"Received data: {data}")
+
+        sheet_response = requests.post(
+            GOOGLE_SCRIPT_URL,
+            json=data,
+            headers={"Content-Type": "application/json"}
+        )
+        sheet_response.raise_for_status()
+
+        return Response(
+            content=sheet_response.text,
+            status_code=200,
+            headers={"Access-Control-Allow-Origin": "*"}
+        )
+
+    except ValueError as e:
+        print(f"Data error: {e}")
+        return Response(f"Bad Request: {e}", status_code=400, headers=cors_headers)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Outbound request failed: {e}")
+        return Response("Internal Server Error: Failed to reach Google Script.", status_code=500, headers=cors_headers)
+
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        return Response(f"Internal Server Error: {e}", status_code=500, headers=cors_headers)

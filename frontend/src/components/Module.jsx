@@ -8,6 +8,7 @@ import Recommendations from './Recommendations';
 import RankQuestion from './RankQuestion';
 import InterestForm from './InterestForm';
 import { recommend } from "../services/recommendApi";
+import { sendToSheet } from '../services/sendToSheetApi';
 import { ReactComponent as ArrowLeft } from "../assets/arrow-left-blk.svg";
 import { ReactComponent as ArrowRight } from "../assets/arrow-right-wht.svg";
 
@@ -51,8 +52,6 @@ const Module = () => {
     if (!studentData || !ranking) return;
 
     try {
-      const FIREBASE_FUNCTION_URL = process.env.REACT_APP_FIREBASE_FUNCTION_URL;
-
       const payload = {
         ...studentData,
         ranking,
@@ -62,22 +61,16 @@ const Module = () => {
 
       console.log("Saving combined data:", payload);
 
-      const response = await fetch(FIREBASE_FUNCTION_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const data = await sendToSheet(payload);
 
-      const text = await response.text();
       try {
-        const data = JSON.parse(text);
-        console.log("Response from Firebase Function:", data);
+        console.log("Response from Send to Sheet Function:", data);
       } catch {
-        console.warn("Received non-JSON response:", text);
+        console.warn("Received non-JSON response:", data);
       }
     } catch (error) {
       console.error("Error saving data:", error);
-      alert("Error submitting. Please try again later.");
+      console.error("Error submitting. Please try again later.");
     }
   };
 
