@@ -3,7 +3,9 @@ import { specialisations } from "./SpecialisationCard";
 import Row from "./Row";
 
 const SpecialisationRow = ({ name, prob }) => {
-  const spec = specialisations.find(s => s.name === name);
+  const spec = specialisations.find(
+    s => s.name.toLowerCase() === name.toLowerCase()
+  );
 
   if (!spec) return null;
 
