@@ -1,5 +1,4 @@
 import React from "react";
-import Block from "./Block";
 import BiomedIcon from "../assets/specialisation_icons/Biomedical.svg";
 import ChemIcon from "../assets/specialisation_icons/Chemical.svg";
 import CivilIcon from "../assets/specialisation_icons/Civil.svg";
@@ -10,6 +9,7 @@ import SoftwareIcon from "../assets/specialisation_icons/Software.svg";
 import AeroIcon from "../assets/specialisation_icons/Aerospace.svg";
 import MechIcon from "../assets/specialisation_icons/Mechanical.svg";
 import TrcIcon from "../assets/specialisation_icons/Mechatronics.svg";
+import Row from "./Row";
 
 const specialisations = [
   { iconSrc: BiomedIcon, name: "Biomedical", description: "Applies engineering principles to medicine and biology." },
@@ -31,7 +31,7 @@ const SpecialisationCard = ({ name, prob }) => {
 
   return (
     <div className="flex justify-center">
-      <Block
+      <Row
         iconSrc={spec.iconSrc}
         name={spec.name}
         description={spec.description}
