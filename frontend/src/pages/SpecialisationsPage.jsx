@@ -43,7 +43,7 @@ const specialisations = {
     ]
   },
   electrical: {
-    name: "Electrical and computer systems Engineering",
+    name: "Electrical and Computer Systems Engineering",
     description: "Works with electrical systems, electronics, and power generation.",
     links: [
       { label: "Monash University - Bachelor of Electrical Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/electrical-and-computer-systems-engineering-xs0004" },
