@@ -237,11 +237,13 @@ const Module = () => {
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-gradient-to-br from-sky-50 to-white p-6 rounded-2xl shadow-sm transition-shadow hover:shadow-[0_10px_10px_-10px_rgba(0,0,0,0.07)]">
-      <ProgressHeader
-        totalSections={questions.length}
-        currentSection={currentQuestionIndex}
-        isComplete={completed}
-      />
+      <div className="w-full">
+        <ProgressHeader
+          totalSections={questions.length}
+          currentSection={currentQuestionIndex}
+          isComplete={completed}
+        />
+      </div>
 
       <div className="flex-1 w-full max-w-4xl overflow-y-auto mt-1 mb-6 pt-5">
         {renderQuestion()}

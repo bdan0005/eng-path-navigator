@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'https://eng-path-navigator-backend.onrender.com',
   timeout: 50000,
   headers: {
     'Content-Type': 'application/json',
