@@ -15,6 +15,11 @@ MODEL_DIR = os.path.join(BASE_DIR, "model")
 clf = joblib.load(os.path.join(MODEL_DIR, "pred_model.pkl"))
 scaler = joblib.load(os.path.join(MODEL_DIR, "scaler.pkl"))
 
+GOOGLE_SCRIPT_URL = os.environ.get("GOOGLE_SCRIPT_URL")
+
+if GOOGLE_SCRIPT_URL is None:
+    raise ValueError("GOOGLE_SCRIPT_URL is not set in environment variables")
+
 @router.get("/hello")
 def say_hello():
     return {"message": "Hello from FastAPI route!"}
