@@ -11,7 +11,7 @@ import AeroIcon from "../assets/specialisation_icons/Aerospace.svg";
 import MechIcon from "../assets/specialisation_icons/Mechanical.svg";
 import TrcIcon from "../assets/specialisation_icons/Mechatronics.svg";
 
-const specialisations = [
+export const specialisations = [
   { iconSrc: BiomedIcon, name: "Biomedical", description: "Applies engineering principles to medicine and biology." },
   { iconSrc: ChemIcon, name: "Chemical", description: "Focuses on chemical processes and production." },
   { iconSrc: CivilIcon, name: "Civil", description: "Designs and builds infrastructure projects." },
