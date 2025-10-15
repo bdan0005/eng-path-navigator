@@ -25,7 +25,9 @@ export const specialisations = [
 ];
 
 const SpecialisationCard = ({ name, prob }) => {
-  const spec = specialisations.find(s => s.name === name);
+  const spec = specialisations.find(
+    s => s.name.toLowerCase() === name.toLowerCase()
+  );
 
   if (!spec) return null;
 
