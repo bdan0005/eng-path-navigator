@@ -16,7 +16,7 @@ const Recommendations = ({ specialisations }) => {
       </div>
 
       <div className="grid grid-rows-7 gap-2 sm:p-1 md:p-5">
-        {rest.map(([spec, prob], idx) => (
+        {rest.map(({spec, prob}, idx) => (
           <SpecialisationRow key={idx} name={spec} prob={prob} />
         ))}
       </div>
