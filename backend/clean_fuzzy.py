@@ -276,6 +276,14 @@ coef_personality = coef_df[personality_features]
 coef_skills = coef_df[skills_features]
 coef_hobbies = coef_df[hobby_features]
 
+# Coefficient averages for each group
+abs_avg_personality = coef_personality.abs().mean().mean()
+abs_avg_skills = coef_skills.abs().mean().mean()
+abs_avg_hobbies = coef_hobbies.abs().mean().mean()
+print(f"\nAverage absolute coefficient - Personality: {abs_avg_personality:.4f}")
+print(f"Average absolute coefficient - Skills: {abs_avg_skills:.4f}")
+print(f"Average absolute coefficient - Hobbies: {abs_avg_hobbies:.4f}")
+
 # Plot heatmaps
 plt.figure(figsize=(8, 4))
 sns.heatmap(coef_personality, annot=True, cmap="coolwarm", center=0, cbar=True)
