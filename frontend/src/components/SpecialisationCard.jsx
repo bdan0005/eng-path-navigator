@@ -15,7 +15,7 @@ export const specialisations = [
   { iconSrc: BiomedIcon, name: "Biomedical", description: "Applies engineering principles to medicine and biology." },
   { iconSrc: ChemIcon, name: "Chemical", description: "Focuses on chemical processes and production." },
   { iconSrc: CivilIcon, name: "Civil", description: "Designs and builds infrastructure projects." },
-  { iconSrc: ElecIcon, name: "Electrical and computer systems", description: "Works with electrical systems and technology." },
+  { iconSrc: ElecIcon, name: "Electrical and Computer Systems", description: "Works with electrical systems and technology." },
   { iconSrc: EnviroIcon, name: "Environmental", description: "Solves environmental problems using engineering." },
   { iconSrc: MatIcon, name: "Materials", description: "Develops and tests new materials." },
   { iconSrc: SoftwareIcon, name: "Software", description: "Designs and builds software systems." },
