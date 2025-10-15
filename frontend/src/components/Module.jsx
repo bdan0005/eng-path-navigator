@@ -32,7 +32,7 @@ const questions = [
   {
     id: 3,
     type: 'rank',
-    text: "Please rank four content items that you found most interesting from the first-year engineering foundation units.",
+    text: "Please rank the content items that you found most interesting from the first-year engineering foundation units.",
     options: ["Chemical processes (wastewater)", "Circuits", "Coding", "Computer aided design (CAD)", "Data analysis", "Dynamics", "Engineering design", "Materials properties", "Numerical modelling", "Smart systems", "Statics", "3D printing"],
     maxRank: 4,
   }
