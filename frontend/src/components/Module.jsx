@@ -212,10 +212,10 @@ const Module = () => {
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-white p-10 rounded-2xl shadow-md">
         <div className="space-y-6">
           <div className="space-y-3">
-            <div className="text-center text-black text-5xl font-bold whitespace-pre-line leading-normal">
+            <div className="pb-2 text-center text-black text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold whitespace-pre-line leading-normal">
               {"Engineering Pathways\nNavigator"}
             </div>
-            <div className="text-center text-black text-lg font-medium whitespace-pre-line leading-normal">
+            <div className="text-center text-black text-base sm:text-lg md:text-xl lg:text-xl font-medium whitespace-pre-line leading-normal">
               {"Take this short quiz to find what specialisation suits\nyou best."}
             </div>
           </div>

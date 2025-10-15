@@ -42,7 +42,7 @@ const Button = ({
 
     "primary-shadow": `
       bg-sky-700 text-white shadow-md
-      hover:shadow-lg 
+      hover:bg-sky-800 shadow-lg 
       active:bg-sky-900 
       focus:outline-none focus:ring-2 focus:ring-sky-700/50
       disabled:opacity-50 disabled:cursor-not-allowed
