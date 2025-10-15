@@ -46,9 +46,8 @@ const specialisations = {
     name: "Electrical and computer systems Engineering",
     description: "Works with electrical systems, electronics, and power generation.",
     links: [
-      { label: "Monash University - Bachelor of Electrical and Computer Systems Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/electrical-and-computer-systems-engineering-xs0004" },
-      { label: "Monash University Handbook - Electrical and Computer Systems Engineering", url: "https://handbook.monash.edu/current/aos/ECSYSENG04" },
-      { label: "UNSW - What do electrical engineers do?", url: "https://www.unsw.edu.au/engineering/our-schools/electrical-engineering-telecommunications/student-life/high-school-students/What-do-electrical-engineers-do" }    
+      { label: "Monash University - Bachelor of Electrical Engineering", url: "https://www.monash.edu/study/courses/majors-minors-specialisations/specialisations/electrical-and-computer-systems-engineering-xs0004" },
+      { label: "Monash University Handbook - Electrical Engineering", url: "https://handbook.monash.edu/current/aos/ECSYSENG04" }
     ]
   },
   environmental: {
